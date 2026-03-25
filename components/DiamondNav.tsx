@@ -1,11 +1,13 @@
 'use client';
 
+import { useState } from 'react';
 import { usePortfolioStore, PageId } from '@/store/usePortfolioStore';
 import { motion } from 'framer-motion';
 
 export default function DiamondNav({ item, index, side }: { item: any, index: number, side: string }) {
   const activePage = usePortfolioStore((state) => state.activePage);
   const setActivePage = usePortfolioStore((state) => state.setActivePage);
+  const [isHovered, setIsHovered] = useState(false);
 
   const isActive = activePage === item.page;
 
@@ -25,6 +27,8 @@ export default function DiamondNav({ item, index, side }: { item: any, index: nu
     <a
       data-cursor="expand"
       onClick={handleClick}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
       href={`#${item.label.toLowerCase()}`}
       className={`absolute ${side === 'left' ? 'left-8' : 'right-8'} w-24 flex flex-col items-center gap-4 group -translate-y-1/2 cursor-pointer z-40 transition-transform duration-300 p-2`}
       style={{ top: topPos }}
@@ -32,15 +36,16 @@ export default function DiamondNav({ item, index, side }: { item: any, index: nu
       <motion.div
         animate={{ 
           scale: isActive ? 1.15 : 1, 
-          backgroundColor: isActive ? '#fff' : 'transparent',
-          borderColor: isActive ? '#fff' : 'rgba(255,255,255,0.5)',
+          backgroundColor: (isActive || isHovered) ? '#fff' : 'rgba(255,255,255,0)',
+          borderColor: (isActive || isHovered) ? '#fff' : 'rgba(255,255,255,0.5)',
         }}
         transition={{ duration: 0.3, ease: 'easeOut' }}
-        className="relative flex items-center justify-center w-7 h-7 border rotate-45 group-hover:border-white group-hover:bg-white group-hover:text-black transition-colors duration-300"
+        className="relative flex items-center justify-center w-7 h-7 border rotate-45"
       >
         <motion.span 
-          animate={{ color: isActive ? '#000' : '' }}
-          className={`absolute -rotate-[45deg] font-mono text-[10px] leading-none mb-[1px] ml-[1px] ${isActive ? 'text-black font-bold' : ''}`}
+          animate={{ color: (isActive || isHovered) ? '#000' : '#fff' }}
+          transition={{ duration: 0.3, ease: 'easeOut' }}
+          className={`absolute -rotate-[45deg] font-mono text-[10px] leading-none mb-[1px] ml-[1px] ${isActive ? 'font-bold' : ''}`}
         >
           {item.id}
         </motion.span>
