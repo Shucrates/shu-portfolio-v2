@@ -19,6 +19,7 @@ export default function Home() {
   const [time, setTime] = useState<string>('');
   const setMousePosition = usePortfolioStore((state) => state.setMousePosition);
   const setActivePage = usePortfolioStore((state) => state.setActivePage);
+  const setLockedPage = usePortfolioStore((state) => state.setLockedPage);
 
   // Global Mouse Tracker for Parallax Data (Zustand)
   useEffect(() => {
@@ -62,9 +63,12 @@ export default function Home() {
         
         {/* Top-left Snowflake */}
         <div 
-          onClick={() => setActivePage('home')}
+          onClick={() => {
+            setLockedPage(null);
+            setActivePage('home');
+          }}
           data-cursor="expand" 
-          className="text-4xl leading-none font-bold mt-[-8px] select-none p-2 cursor-pointer z-50"
+          className="text-4xl leading-none font-bold mt-[-8px] select-none p-2 cursor-pointer z-50 text-white"
         >
           *
         </div>

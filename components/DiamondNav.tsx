@@ -7,16 +7,29 @@ import { motion } from 'framer-motion';
 export default function DiamondNav({ item, index, side }: { item: any, index: number, side: string }) {
   const activePage = usePortfolioStore((state) => state.activePage);
   const setActivePage = usePortfolioStore((state) => state.setActivePage);
+  const lockedPage = usePortfolioStore((state) => state.lockedPage);
+  const setLockedPage = usePortfolioStore((state) => state.setLockedPage);
+
   const [isHovered, setIsHovered] = useState(false);
 
   const isActive = activePage === item.page;
 
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+    setActivePage(item.page as PageId);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+    setActivePage(lockedPage || 'home');
+  };
+
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
-    if (isActive) {
-      setActivePage('home'); // Toggle back home
+    if (lockedPage === item.page) {
+      setLockedPage(null); // click again to toggle lock off
     } else {
-      setActivePage(item.page as PageId);
+      setLockedPage(item.page as PageId);
     }
   };
 
@@ -27,8 +40,8 @@ export default function DiamondNav({ item, index, side }: { item: any, index: nu
     <a
       data-cursor="expand"
       onClick={handleClick}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
       href={`#${item.label.toLowerCase()}`}
       className={`absolute ${side === 'left' ? 'left-8' : 'right-8'} w-24 flex flex-col items-center gap-4 group -translate-y-1/2 cursor-pointer z-40 transition-transform duration-300 p-2`}
       style={{ top: topPos }}
