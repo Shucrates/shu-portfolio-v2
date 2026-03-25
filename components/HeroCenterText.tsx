@@ -113,17 +113,17 @@ export default function HeroCenterText() {
       
       <h1 
         data-cursor="expand" 
-        className="font-display text-7xl sm:text-8xl md:text-9xl uppercase leading-[0.85] tracking-tight mb-4 mr-[-1rem] cursor-default whitespace-pre-line"
+        className="font-display text-6xl sm:text-7xl md:text-8xl uppercase leading-[0.85] tracking-tight mb-4 mr-[-1rem] cursor-default whitespace-pre-line"
         onMouseEnter={scrambleHover}
         onMouseLeave={scrambleLeave}
       >
         <span ref={titleRef}>{PAGE_CONTENT[activePage].title}</span>
-        <span className="text-6xl sm:text-7xl md:text-8xl align-top text-white/90">*</span>
+        <span className="text-5xl sm:text-6xl md:text-7xl align-top text-white/90">*</span>
       </h1>
       
       {/* Wrap subtitle and button in a strict layout footprint to prevent the H1 title from shifting during flex-centering when line breaks or buttons dynamically appear */}
       <div className="w-full flex flex-col items-center justify-start min-h-[160px]">
-        <p ref={subtitleRef} className="font-mono text-[10px] sm:text-xs tracking-[0.2em] sm:tracking-[0.3em] text-[#a3a3a3] text-center max-w-[500px] mt-2 mb-8 leading-loose uppercase whitespace-pre-line">
+        <p ref={subtitleRef} className="font-mono text-[8.5px] sm:text-[10px] tracking-[0.2em] sm:tracking-[0.3em] text-[#a3a3a3] text-center max-w-[500px] mt-2 mb-8 leading-loose uppercase whitespace-pre-line">
           {PAGE_CONTENT[activePage].subtitle}
         </p>
 

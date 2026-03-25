@@ -70,9 +70,6 @@ export default function WorkBackground() {
       ref={containerRef} 
       className={`absolute inset-0 w-full h-full overflow-hidden pointer-events-none z-10 ${activePage === 'work' ? 'block' : 'hidden'}`}
     >
-      {/* Animated Grainy Static Filter */}
-      <div className="noise-bg" />
-
       {dummyImages.map((img) => (
         <div
           key={img.id}
