@@ -23,7 +23,8 @@ const PAGE_CONTENT: Record<string, { title: string, subtitle: string, button?: s
   },
   services: {
     title: "SERVICES",
-    subtitle: "WHAT I BRING TO THE TABLE"
+    subtitle: "WHAT I BRING TO THE TABLE",
+    button: "VIEW SERVICES"
   },
   archive: {
     title: "ARCHIVE",
@@ -43,6 +44,9 @@ export default function HeroCenterText() {
   const activePage = usePortfolioStore((state) => state.activePage);
   const isWorkDetail = usePortfolioStore((state) => state.isWorkDetail);
   const setIsWorkDetail = usePortfolioStore((state) => state.setIsWorkDetail);
+  const isAboutDetail = usePortfolioStore((state) => state.isAboutDetail);
+  const isServicesDetail = usePortfolioStore((state) => state.isServicesDetail);
+  const setIsServicesDetail = usePortfolioStore((state) => state.setIsServicesDetail);
   
   const containerRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLSpanElement>(null);
@@ -86,7 +90,11 @@ export default function HeroCenterText() {
   };
 
   useEffect(() => {
-    if (isWorkDetail && activePage === 'work') {
+    const isHidden = (isWorkDetail && activePage === 'work') || 
+                     (isAboutDetail && activePage === 'about') || 
+                     (isServicesDetail && activePage === 'services');
+
+    if (isHidden) {
       gsap.to(containerRef.current, {
         scale: 0,
         opacity: 0,
@@ -124,7 +132,7 @@ export default function HeroCenterText() {
          });
       }
     }
-  }, [isWorkDetail, activePage]);
+  }, [isWorkDetail, isAboutDetail, isServicesDetail, activePage]);
 
   useEffect(() => {
     const prev = prevPageRef.current;
@@ -170,29 +178,65 @@ export default function HeroCenterText() {
       
       {/* Wrap subtitle and button in a strict layout footprint to prevent the H1 title from shifting during flex-centering when line breaks or buttons dynamically appear */}
       <div className="w-full flex flex-col items-center justify-start min-h-[160px]">
-        <p ref={subtitleRef} className="font-mono text-[10px] sm:text-[12px] tracking-[0.2em] sm:tracking-[0.3em] text-[#a3a3a3] text-center max-w-[500px] mt-2 mb-8 leading-loose uppercase whitespace-pre-line">
-          {PAGE_CONTENT[activePage].subtitle}
-        </p>
+        {(activePage === 'archive' || activePage === 'awards') ? (
+          <div className="mt-8 flex flex-col items-center gap-4 fade-in">
+             <div className="flex items-center gap-4">
+                <span className="w-8 h-[1px] bg-white/20" />
+                <span className="text-[10px] tracking-[0.6em] text-white/30 uppercase font-mono italic">System_Restriction</span>
+                <span className="w-8 h-[1px] bg-white/20" />
+             </div>
+             
+             <div className="relative p-6 border border-white/5 bg-white/[0.02] flex flex-col items-center gap-3">
+                {/* CORNER ACCENTS */}
+                <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-white/30" />
+                <div className="absolute top-0 right-0 w-2 h-2 border-t border-r border-white/30" />
+                <div className="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-white/30" />
+                <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-white/30" />
 
-        <button 
-          ref={buttonRef}
-          data-cursor="expand" 
-          style={{ display: PAGE_CONTENT[activePage].button ? 'block' : 'none', opacity: PAGE_CONTENT[activePage].button ? 1 : 0 }}
-          className="relative px-8 py-3.5 font-mono text-[11px] tracking-widest text-[#a3a3a3] hover:text-white uppercase transition-colors"
-          onClick={() => {
-            if (activePage === 'work') {
-              setIsWorkDetail(true);
-            } else if (activePage === 'about') {
-              usePortfolioStore.getState().setIsAboutDetail(true);
-            }
-          }}
-        >
-          <span className="absolute top-0 left-0 w-2 h-2 border-t-[1.5px] border-l-[1.5px] border-white/50" />
-          <span className="absolute top-0 right-0 w-2 h-2 border-t-[1.5px] border-r-[1.5px] border-white/50" />
-          <span className="absolute bottom-0 left-0 w-2 h-2 border-b-[1.5px] border-l-[1.5px] border-white/50" />
-          <span className="absolute bottom-0 right-0 w-2 h-2 border-b-[1.5px] border-r-[1.5px] border-white/50" />
-          {PAGE_CONTENT[activePage].button || 'VIEW ALL'}
-        </button>
+                <p className="font-mono text-[11px] tracking-[0.4em] text-white/60 uppercase animate-pulse">
+                   Work_In_Progress
+                </p>
+                
+                <div className="flex gap-1.5">
+                   <div className="w-1.5 h-1.5 bg-green-500/20" />
+                   <div className="w-1.5 h-1.5 bg-green-500/20" />
+                   <div className="w-1.5 h-1.5 bg-green-500/20 animate-pulse" />
+                </div>
+             </div>
+
+             <p className="text-[8px] tracking-[0.5em] text-white/20 uppercase mt-2">
+                EST_COMPLETION: TBD // Q3_2026
+             </p>
+          </div>
+        ) : (
+          <>
+            <p ref={subtitleRef} className="font-mono text-[10px] sm:text-[12px] tracking-[0.2em] sm:tracking-[0.3em] text-[#a3a3a3] text-center max-w-[500px] mt-2 mb-8 leading-loose uppercase whitespace-pre-line">
+              {PAGE_CONTENT[activePage].subtitle}
+            </p>
+
+            <button 
+              ref={buttonRef}
+              data-cursor="expand" 
+              style={{ display: PAGE_CONTENT[activePage].button ? 'block' : 'none', opacity: PAGE_CONTENT[activePage].button ? 1 : 0 }}
+              className="relative px-8 py-3.5 font-mono text-[11px] tracking-widest text-[#a3a3a3] hover:text-white uppercase transition-colors"
+              onClick={() => {
+                if (activePage === 'work') {
+                  setIsWorkDetail(true);
+                } else if (activePage === 'about') {
+                  usePortfolioStore.getState().setIsAboutDetail(true);
+                } else if (activePage === 'services') {
+                  setIsServicesDetail(true);
+                }
+              }}
+            >
+              <span className="absolute top-0 left-0 w-2 h-2 border-t-[1.5px] border-l-[1.5px] border-white/50" />
+              <span className="absolute top-0 right-0 w-2 h-2 border-t-[1.5px] border-r-[1.5px] border-white/50" />
+              <span className="absolute bottom-0 left-0 w-2 h-2 border-b-[1.5px] border-l-[1.5px] border-white/50" />
+              <span className="absolute bottom-0 right-0 w-2 h-2 border-b-[1.5px] border-r-[1.5px] border-white/50" />
+              {PAGE_CONTENT[activePage].button || 'VIEW ALL'}
+            </button>
+          </>
+        )}
       </div>
 
     </div>

@@ -13,16 +13,15 @@ export default function AboutDetailCard() {
   useEffect(() => {
     if (isAboutDetail && activePage === 'about') {
       gsap.fromTo(containerRef.current,
-        { opacity: 0, scale: 0.8, y: 100 },
-        { opacity: 1, scale: 1, y: 0, duration: 1.2, ease: 'expo.out' }
+        { opacity: 0, scale: 0.98 },
+        { opacity: 1, scale: 1, duration: 0.5, ease: 'power2.out' }
       );
     } else {
       gsap.to(containerRef.current, {
         opacity: 0,
-        scale: 0.8,
-        y: 100,
-        duration: 0.8,
-        ease: 'expo.inOut'
+        scale: 0.98,
+        duration: 0.4,
+        ease: 'power2.inOut'
       });
     }
   }, [isAboutDetail, activePage]);
@@ -32,174 +31,149 @@ export default function AboutDetailCard() {
   return (
     <div 
       ref={containerRef}
-      className={`fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-8 bg-black ${isAboutDetail ? 'pointer-events-auto' : 'pointer-events-none'}`}
+      className={`fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-8 bg-black/85 backdrop-blur-md ${isAboutDetail ? 'pointer-events-auto' : 'pointer-events-none'}`}
       style={{ opacity: 0 }}
     >
-      {/* THE CARD CONTAINER */}
-      <div className="relative w-full max-w-[650px] max-h-[90vh] overflow-y-auto custom-scrollbar bg-[#0a0a0a] border border-white/20 shadow-[0_0_50px_rgba(255,255,255,0.05)] flex flex-col">
+      {/* Y2K EXPLORER CONTAINER */}
+      <div className="relative w-full max-w-[850px] h-[650px] bg-[#0a0a0a] border border-white/20 flex flex-col shadow-[0_30px_60px_rgba(0,0,0,0.9)] overflow-hidden font-mono text-white/90">
         
-        {/* VHS SCANLINE OVERLAY */}
-        <div className="absolute inset-0 pointer-events-none opacity-[0.03] noise-bg z-50" />
-        <div className="absolute inset-0 pointer-events-none opacity-[0.05] z-50" 
-             style={{ backgroundImage: 'repeating-linear-gradient(0deg, #fff, #fff 1px, transparent 1px, transparent 2px)', backgroundSize: '100% 3px' }} />
-
-        {/* HEADER SECTION */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-white/10 font-mono text-[9px] tracking-[0.2em] text-white/60">
-           <div className="flex items-center gap-4">
-              <span>{'>'}SHU_PROFILE_V2.0</span>
-              <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
+        {/* TITLE BAR */}
+        <div className="h-10 bg-white/5 border-b border-white/10 flex items-center justify-between px-5 shrink-0 select-none">
+           <div className="flex items-center gap-3">
+              <div className="w-3.5 h-3.5 border border-white/20 flex items-center justify-center text-[8px] font-bold">PR</div>
+              <span className="text-[10px] tracking-[0.4em] uppercase opacity-40">Profile_Dossier.sys</span>
            </div>
-           <div className="flex items-center gap-6">
-              <div className="flex items-center gap-2">
-                 <span>SIGNAL: OPTIMAL</span>
-                 <div className="flex gap-0.5">
-                    <div className="w-1 h-2 bg-white" />
-                    <div className="w-1 h-2 bg-white" />
-                    <div className="w-1 h-2 bg-white" />
-                    <div className="w-1 h-2 bg-white/20" />
-                 </div>
-              </div>
-              <div className="flex items-center gap-2 border border-white/20 px-1 py-0.5">
-                 <div className="w-3 h-1.5 bg-green-500" />
-                 <span>BATTERY: 88%</span>
-              </div>
+           <div className="flex gap-2">
+              <button 
+                onClick={() => setIsAboutDetail(false)}
+                className="w-8 h-6 border border-white/10 hover:bg-red-500/80 flex items-center justify-center text-[10px] transition-colors"
+              >
+                ✕
+              </button>
            </div>
         </div>
 
-        {/* LOGO & ACCESS BAR */}
-        <div className="flex items-center justify-between px-6 py-8 border-b border-white/5">
-           <div className="flex flex-col">
-              <span className="font-mono text-[8px] text-white/30 uppercase tracking-[0.4em] mb-1">CRAFTING DIGITAL REALITIES</span>
-              <h2 className="font-display text-4xl tracking-tighter text-white uppercase italic">SHUISBORED</h2>
-           </div>
-           <div className="flex flex-col items-end">
-              <span className="font-mono text-[8px] text-white/30 uppercase tracking-[0.4em] mb-1">SYSTEM_ACCESS</span>
-              <span className="font-mono text-xs text-white/80 tracking-widest uppercase">******_GRANTED</span>
+        {/* ADDRESS BAR */}
+        <div className="h-10 border-b border-white/10 flex items-center px-5 gap-5 shrink-0 bg-white/[0.01]">
+           <span className="text-[9px] uppercase tracking-[0.4em] text-white/20 font-bold">Location:</span>
+           <div className="flex-1 h-6 bg-black/40 border border-white/5 flex items-center px-4 text-[9px] font-mono tracking-widest text-white/30 truncate">
+              C:\SYS\USER\SHUBHAM_PATIL
            </div>
         </div>
 
-        {/* MAIN CONTENT GRID */}
-        <div className="flex flex-col md:flex-row border-b border-white/5">
+        {/* MAIN CONTENT SCROLL AREA */}
+        <div className="flex-1 overflow-y-auto custom-scrollbar">
            
-           {/* LEFT: IMAGE & GLITCH STATS */}
-           <div className="w-full md:w-[45%] border-r border-white/5 relative aspect-square md:aspect-auto overflow-hidden">
-              <div className="absolute inset-0 bg-zinc-900 flex items-center justify-center">
-                 {/* This should be replaced with a real profile image */}
-                 <div className="w-full h-full grayscale contrast-150 brightness-75 bg-[url('/work/shubham-missing-poster-2.png')] bg-cover bg-center" />
-                 
-                 {/* GLITCH OVERLAYS */}
-                 <div className="absolute inset-0 bg-black/40 mix-blend-overlay pointer-events-none" />
-                 <div className="absolute top-4 left-4 font-mono text-[7px] text-white/40 uppercase space-y-1">
-                    <div>POS: 19.0752° N</div>
-                    <div>LON: 72.8777° E</div>
-                    <div className="text-green-500/60">STATUS: ACTIVE</div>
-                 </div>
-              </div>
-              <div className="absolute inset-0 border-[20px] border-black/20 pointer-events-none" />
-           </div>
-
-           {/* RIGHT: ATTRIBUTES & SKILLS */}
-           <div className="w-full md:w-[55%] p-8 flex flex-col justify-center bg-white/[0.01]">
-              <div className="font-mono text-[10px] text-white/40 uppercase tracking-[0.5em] mb-8 flex items-center gap-3">
-                 <span className="w-8 h-[1px] bg-white/10" />
-                 CORE_ATTRIBUTES
-              </div>
+           {/* PROFILE IDENTIFICATION SECTION */}
+           <div className="p-8 border-b border-white/5 flex flex-col md:flex-row gap-12">
               
+              {/* PORTRAIT - Video version */}
+              <div className="w-full md:w-[260px] aspect-[3/4] border border-white/10 relative overflow-hidden group bg-black shrink-0">
+                 <video 
+                   autoPlay 
+                   loop 
+                   muted 
+                   playsInline 
+                   className="absolute inset-0 w-full h-full object-cover grayscale contrast-125 opacity-70 group-hover:opacity-100 transition-opacity duration-700"
+                 >
+                   <source src="/about/shubham-photo-vhs.mp4" type="video/mp4" />
+                 </video>
+                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none" />
+                 <div className="absolute inset-0 border-[10px] border-black/20 pointer-events-none" />
+                 <div className="absolute bottom-3 left-3 text-[8px] text-white/40 tracking-[0.3em] font-bold">SUB_ID: 24-10-2162</div>
+              </div>
+
+              {/* CORE STATS */}
+              <div className="flex-1 space-y-8">
+                 <div className="grid grid-cols-2 gap-y-8 gap-x-8">
+                    <StatItem label="1.2 / NAME" value="SHUBHAM NILESH PATIL" highlight />
+                    <StatItem label="ARCHIVE#" value="LPR-ECC-D-HFXD0162" />
+                    <StatItem label="3 DOB /" value="24-10-2004" />
+                    <StatItem label="4 IN.SPEC /" value="HUMAN_ARCHITECT [WEB • UI/UX • AI SYSTEMS]" />
+                    <StatItem label="5 BIO GEN /" value="MALE" />
+                    <StatItem label="7 STATUS /" value="ACTIVE [BUILDING]" highlightColor="text-green-500" />
+                    <StatItem label="6 EYES /" value="BLACK" />
+                    <StatItem label="8 TITLE /" value="WEB & APP DEVELOPER • UI/UX DESIGNER • AI CREATOR" />
+                 </div>
+
+                 {/* CORE_ATTRIBUTES // SKILLS */}
+                 <div className="pt-8 border-t border-white/5 space-y-4">
+                    <div className="text-[9px] text-white/30 tracking-[0.5em] text-center mb-6">CORE_ATTRIBUTES // SKILLS</div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-5">
+                       <AttributeBar label="WEB_DEV" value={90} />
+                       <AttributeBar label="APP_DEV" value={85} />
+                       <AttributeBar label="UI_UX" value={85} />
+                       <AttributeBar label="GRAPHIC_DESIGN" value={80} />
+                       <AttributeBar label="AI/ML" value={75} />
+                    </div>
+                 </div>
+              </div>
+           </div>
+
+           {/* BIOGRAPHY MODULE */}
+           <div className="p-8 border-b border-white/5 space-y-6">
+              <div className="flex items-center gap-4">
+                 <h3 className="text-[10px] tracking-[0.5em] text-white uppercase font-bold">BIOGRAPHY /</h3>
+                 <div className="flex-1 h-[1px] bg-white/10" />
+              </div>
               <div className="space-y-6">
-                 <AttributeBar label="DESIGN" value={8} />
-                 <AttributeBar label="DEVELOPMENT" value={9} />
-                 <AttributeBar label="MOTION_GSAP" value={7} />
-                 <AttributeBar label="UI_SYSTEMS" value={8} />
-                 <AttributeBar label="COFFEE_LEVEL" value={10} />
-              </div>
-
-              <div className="mt-10 pt-8 border-t border-white/5 grid grid-cols-2 gap-4">
-                 <div className="space-y-1">
-                    <span className="font-mono text-[8px] text-white/30 uppercase tracking-widest">RANK</span>
-                    <div className="font-mono text-[10px] text-white/80 uppercase tracking-widest">SR_ARCHITECT</div>
-                 </div>
-                 <div className="space-y-1">
-                    <span className="font-mono text-[8px] text-white/30 uppercase tracking-widest">SECTOR</span>
-                    <div className="font-mono text-[10px] text-white/80 uppercase tracking-widest">VISUAL_EXP</div>
-                 </div>
+                 <p className="text-[11px] text-white/60 leading-relaxed uppercase tracking-widest max-w-[750px] text-justify">
+                    Shubham Nilesh Patil operates at the convergence of web development, application design, and intelligent systems. With a strong foundation in building responsive web platforms and modern application interfaces, his work emphasizes both performance and user-centric design.
+                 </p>
+                 <p className="text-[11px] text-white/60 leading-relaxed uppercase tracking-widest max-w-[750px] text-justify">
+                    He specializes in crafting intuitive UI/UX systems, translating ideas into clean, scalable digital products while maintaining a sharp eye for visual design and branding. From designing interfaces in Figma to developing full-stack web experiences, his workflow bridges creativity with technical precision.
+                 </p>
+                 <p className="text-[11px] text-white/60 leading-relaxed uppercase tracking-widest max-w-[750px] text-justify">
+                    Alongside design and development, he is actively exploring artificial intelligence and machine learning, integrating intelligent features into real-world applications. His projects reflect a blend of structured engineering and visual storytelling, ranging from modern web platforms to AI-driven problem-solving systems.
+                 </p>
+                 <p className="text-[11px] text-white/60 leading-relaxed uppercase tracking-widest max-w-[750px] text-justify pb-8">
+                    Currently balancing academics, practical experience, and continuous upskilling, he is focused on expanding his expertise across web technologies, product design, and AI — with the goal of building impactful, globally relevant digital products.
+                 </p>
               </div>
            </div>
         </div>
 
-        {/* BIO & EXPERIENCE SECTION */}
-        <div className="p-8 space-y-10">
-           <div className="space-y-4">
-              <div className="font-mono text-[10px] text-white/40 uppercase tracking-[0.5em] flex items-center gap-3">
-                 <span className="w-8 h-[1px] bg-white/10" />
-                 SYSTEM_BIO:
-              </div>
-              <p className="font-mono text-[11px] text-white/70 leading-relaxed uppercase tracking-wider max-w-[700px]">
-                 Multidisciplinary designer and developer with a focus on high-fidelity digital experiences. 
-                 Specializing in the intersection of technical architecture and visual storytelling. 
-                 Building products that balance raw performance with cyber-brutalist aesthetics.
-              </p>
+        {/* STATUS BAR */}
+        <div className="h-8 bg-white/5 border-t border-white/10 flex items-center justify-between px-5 shrink-0 text-[7px] uppercase tracking-[0.5em] text-white/15">
+           <div className="flex items-center gap-8">
+              <span>SYSTEM_USER_01</span>
+              <span className="w-[1px] h-3 bg-white/10" />
+              <span>ACCESS_GRANTED</span>
            </div>
-
-           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-8 border-t border-white/5">
-              <div className="space-y-4">
-                 <div className="font-mono text-[9px] text-white/30 uppercase tracking-[0.3em]">EXPERIENCE_HISTORY:</div>
-                 <div className="space-y-3 font-mono text-[10px] uppercase">
-                    <div className="flex justify-between text-white/80">
-                       <span>FREELANCE @ SHUISBORED</span>
-                       <span className="text-white/40">2020-PRESENT</span>
-                    </div>
-                    <div className="flex justify-between text-white/80">
-                       <span>UI/UX @ SEAGUARD</span>
-                       <span className="text-white/40">2022-2023</span>
-                    </div>
-                 </div>
-              </div>
-              <div className="space-y-4">
-                 <div className="font-mono text-[9px] text-white/30 uppercase tracking-[0.3em]">INTERESTS_CORE:</div>
-                 <div className="flex flex-wrap gap-2">
-                    {['CYBER_BRUTALISM', 'VHS_AESTHETICS', 'GLITCH_ART', 'LO-FI_TECH'].map(tag => (
-                       <span key={tag} className="px-2 py-1 bg-white/5 border border-white/10 font-mono text-[8px] text-white/60 tracking-widest">
-                          {tag}
-                       </span>
-                    ))}
-                 </div>
-              </div>
+           <div className="flex items-center gap-4">
+              <span>ENCRYPTED_DOSSIER</span>
+              <div className="w-2 h-2 rounded-full border border-white/20 bg-green-500/20 shadow-[0_0_8px_rgba(34,197,94,0.2)] animate-pulse" />
            </div>
         </div>
 
-        {/* FOOTER ACTION */}
-        <div className="px-6 py-6 border-t border-white/10 flex items-center justify-between">
-           <div className="font-mono text-[8px] text-white/20 uppercase tracking-[0.4em]">
-              © 2026 // SHU_WORKSPACE // ALL_RIGHTS_RESERVED
-           </div>
-           <button 
-             onClick={() => setIsAboutDetail(false)}
-             data-cursor="expand"
-             className="group flex items-center gap-3 py-2 px-6 border border-white/20 hover:border-white/60 transition-colors bg-white/5"
-           >
-              <span className="font-mono text-[9px] tracking-[0.3em] text-white/60 group-hover:text-white uppercase transition-colors">
-                 [ CLOSE_TERMINAL ]
-              </span>
-              <span className="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse shadow-[0_0_5px_red]" />
-           </button>
-        </div>
       </div>
     </div>
   );
 }
 
+function StatItem({ label, value, highlight, highlightColor = "text-white" }: { label: string, value: string, highlight?: boolean, highlightColor?: string }) {
+   return (
+      <div className="space-y-1.5">
+         <div className="text-[8px] text-white/30 tracking-widest uppercase">{label}</div>
+         <div className={`text-[10px] tracking-[0.15em] uppercase font-bold leading-tight ${highlight ? highlightColor : 'text-white/80'}`}>
+            {value}
+         </div>
+      </div>
+   );
+}
+
 function AttributeBar({ label, value }: { label: string, value: number }) {
    return (
       <div className="space-y-2">
-         <div className="flex justify-between font-mono text-[9px] tracking-widest uppercase">
-            <span className="text-white/50">{label}</span>
-            <span className="text-white/80">{value * 10}%</span>
+         <div className="flex justify-between text-[8px] tracking-[0.2em] uppercase">
+            <span className="text-white/40">{label}</span>
+            <span className="text-white/60">{value}%</span>
          </div>
-         <div className="flex gap-1 h-3">
-            {[...Array(12)].map((_, i) => (
+         <div className="flex gap-0.5 h-1.5">
+            {[...Array(20)].map((_, i) => (
                <div 
                   key={i} 
-                  className={`flex-1 transition-colors duration-500 ${i < value ? 'bg-white/80' : 'bg-white/5'}`} 
+                  className={`flex-1 transition-all duration-700 ${i < (value / 100 * 20) ? 'bg-white/70 shadow-[0_0_5px_rgba(255,255,255,0.1)]' : 'bg-white/5'}`} 
                />
             ))}
          </div>

@@ -3,6 +3,7 @@
 import { usePortfolioStore } from '@/store/usePortfolioStore';
 import WorkBackground from '@/components/pages/WorkBackground';
 import AboutBackground from '@/components/pages/AboutBackground';
+import ServicesBackground from '@/components/pages/ServicesBackground';
 
 export default function PageTransitionManager() {
   const activePage = usePortfolioStore((state) => state.activePage);
@@ -24,6 +25,7 @@ export default function PageTransitionManager() {
       {/* Pages Backgrounds */}
       <WorkBackground />
       <AboutBackground />
+      <ServicesBackground />
     </>
   );
 }

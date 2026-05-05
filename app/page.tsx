@@ -6,6 +6,7 @@ import DiamondNav from '@/components/DiamondNav';
 import HeroCenterText from '@/components/HeroCenterText';
 import WorkProjectsList from '@/components/WorkProjectsList';
 import AboutDetailCard from '@/components/AboutDetailCard';
+import ServicesDetailCard from '@/components/ServicesDetailCard';
 import PageTransitionManager from '@/components/PageTransitionManager';
 
 export const navItems = [
@@ -23,7 +24,11 @@ export default function Home() {
   const setActivePage = usePortfolioStore((state) => state.setActivePage);
   const setLockedPage = usePortfolioStore((state) => state.setLockedPage);
   const isWorkDetail = usePortfolioStore((state) => state.isWorkDetail);
+  const isAboutDetail = usePortfolioStore((state) => state.isAboutDetail);
+  const isServicesDetail = usePortfolioStore((state) => state.isServicesDetail);
   const setIsWorkDetail = usePortfolioStore((state) => state.setIsWorkDetail);
+  
+  const isAnyDetailActive = isWorkDetail || isAboutDetail || isServicesDetail;
 
   // Global Mouse Tracker for Parallax Data (Zustand)
   useEffect(() => {
@@ -63,7 +68,7 @@ export default function Home() {
       <div className="absolute top-0 left-0 w-full h-[1px] bg-white opacity-20 z-50"></div>
 
       {/* Top Bar Content */}
-      <div className={`absolute top-6 w-full flex flex-row justify-between items-start px-8 mix-blend-difference z-50 transition-opacity duration-500 ${isWorkDetail ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
+      <div className={`absolute top-6 w-full flex flex-row justify-between items-start px-8 mix-blend-difference z-50 transition-opacity duration-500 ${isAnyDetailActive ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
         
         {/* Top-left Snowflake */}
         <div 
@@ -91,12 +96,12 @@ export default function Home() {
       </div>
 
       {/* Side Navigation - Left */}
-      {!isWorkDetail && leftItems.map((item, index) => (
+      {!isAnyDetailActive && leftItems.map((item, index) => (
         <DiamondNav key={item.id} item={item} index={index} side="left" />
       ))}
 
       {/* Side Navigation - Right */}
-      {!isWorkDetail && rightItems.map((item, index) => (
+      {!isAnyDetailActive && rightItems.map((item, index) => (
         <DiamondNav key={item.id} item={item} index={index} side="right" />
       ))}
 
@@ -109,10 +114,13 @@ export default function Home() {
       {/* About Profile Card (Active when 'Learn More' is clicked in About) */}
       <AboutDetailCard />
 
+      {/* Services Detail Card (Active when 'View Services' is clicked in Services) */}
+      <ServicesDetailCard />
+
 
 
       {/* Bottom Center */}
-      <div data-cursor="expand" className={`absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center text-center font-mono text-[11px] tracking-widest leading-loose text-white/50 lowercase p-2 z-50 transition-opacity duration-500 ${isWorkDetail ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
+      <div data-cursor="expand" className={`absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center text-center font-mono text-[11px] tracking-widest leading-loose text-white/50 lowercase p-2 z-50 transition-opacity duration-500 ${isAnyDetailActive ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
         <span className="capitalize">Available For</span>
         <span className="text-white uppercase tracking-[0.3em] mt-1 relative after:content-[''] after:absolute after:-bottom-2 after:left-0 after:w-full after:h-[1px] after:bg-white/20 hover:after:bg-white transition-colors duration-300 cursor-pointer">
           Freelance
