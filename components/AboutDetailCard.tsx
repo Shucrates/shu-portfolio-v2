@@ -35,7 +35,7 @@ export default function AboutDetailCard() {
       style={{ opacity: 0 }}
     >
       {/* Y2K EXPLORER CONTAINER */}
-      <div className="relative w-full max-w-[850px] h-[650px] bg-[#0a0a0a] border border-white/20 flex flex-col shadow-[0_30px_60px_rgba(0,0,0,0.9)] overflow-hidden font-mono text-white/90">
+      <div className="relative w-full max-w-[850px] h-full sm:h-[650px] bg-[#0a0a0a] border border-white/20 flex flex-col shadow-[0_30px_60px_rgba(0,0,0,0.9)] overflow-hidden font-mono text-white/90">
         
         {/* TITLE BAR */}
         <div className="h-10 bg-white/5 border-b border-white/10 flex items-center justify-between px-5 shrink-0 select-none">
@@ -65,7 +65,7 @@ export default function AboutDetailCard() {
         <div className="flex-1 overflow-y-auto custom-scrollbar">
            
            {/* PROFILE IDENTIFICATION SECTION */}
-           <div className="p-8 border-b border-white/5 flex flex-col md:flex-row gap-12">
+           <div className="p-4 sm:p-8 border-b border-white/5 flex flex-col md:flex-row gap-6 md:gap-12">
               
               {/* PORTRAIT - Video version */}
               <div className="w-full md:w-[260px] aspect-[3/4] border border-white/10 relative overflow-hidden group bg-black shrink-0">
@@ -74,7 +74,7 @@ export default function AboutDetailCard() {
                    loop 
                    muted 
                    playsInline 
-                   className="absolute inset-0 w-full h-full object-cover grayscale contrast-125 opacity-70 group-hover:opacity-100 transition-opacity duration-700"
+                   className="absolute inset-0 w-full h-full object-cover contrast-125 opacity-70 group-hover:opacity-100 transition-opacity duration-700"
                  >
                    <source src="/about/shubham-photo-vhs.mp4" type="video/mp4" />
                  </video>
@@ -85,7 +85,7 @@ export default function AboutDetailCard() {
 
               {/* CORE STATS */}
               <div className="flex-1 space-y-8">
-                 <div className="grid grid-cols-2 gap-y-8 gap-x-8">
+                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-6 sm:gap-y-8 gap-x-8">
                     <StatItem label="1.2 / NAME" value="SHUBHAM NILESH PATIL" highlight />
                     <StatItem label="ARCHIVE#" value="LPR-ECC-D-HFXD0162" />
                     <StatItem label="3 DOB /" value="24-10-2004" />
@@ -111,7 +111,7 @@ export default function AboutDetailCard() {
            </div>
 
            {/* BIOGRAPHY MODULE */}
-           <div className="p-8 border-b border-white/5 space-y-6">
+           <div className="p-4 sm:p-8 border-b border-white/5 space-y-6">
               <div className="flex items-center gap-4">
                  <h3 className="text-[10px] tracking-[0.5em] text-white uppercase font-bold">BIOGRAPHY /</h3>
                  <div className="flex-1 h-[1px] bg-white/10" />

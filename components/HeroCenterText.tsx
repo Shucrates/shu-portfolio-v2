@@ -2,6 +2,7 @@
 
 import { useRef, useEffect } from 'react';
 import gsap from 'gsap';
+import Image from 'next/image';
 import { usePortfolioStore, PageId } from '@/store/usePortfolioStore';
 
 const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ!<>-_\\/[]{}—=+*^?#";
@@ -174,28 +175,6 @@ export default function HeroCenterText() {
         onMouseEnter={scrambleHover}
         onMouseLeave={scrambleLeave}
       >
-        {activePage === 'contact' && !isContactDetail && (
-          <div 
-            className="absolute -top-32 left-1/2 -translate-x-1/2 w-32 h-40 pointer-events-none opacity-80 select-none scale-90"
-            ref={(el) => {
-              if (el) {
-                gsap.to(el, {
-                  y: -15,
-                  duration: 2.5,
-                  repeat: -1,
-                  yoyo: true,
-                  ease: "sine.inOut"
-                });
-              }
-            }}
-          >
-            <img 
-              src="/contact/frames/ezgif-frame-002-Photoroom.png" 
-              alt="Floating Phone" 
-              className="w-full h-full object-contain grayscale brightness-125 contrast-125 mix-blend-screen" 
-            />
-          </div>
-        )}
         <span ref={titleRef}>{PAGE_CONTENT[activePage].title}</span>
         <span className="text-5xl sm:text-6xl md:text-7xl align-top text-white/90">*</span>
       </h1>

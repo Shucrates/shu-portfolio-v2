@@ -65,11 +65,11 @@ export default function ServicesDetailCard() {
   return (
     <div 
       ref={containerRef}
-      className={`fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-8 bg-black/85 backdrop-blur-md ${isServicesDetail ? 'pointer-events-auto' : 'pointer-events-none'}`}
+      className={`fixed inset-0 z-[100] flex items-center justify-center p-0 sm:p-8 bg-black/85 backdrop-blur-md ${isServicesDetail ? 'pointer-events-auto' : 'pointer-events-none'}`}
       style={{ opacity: 0 }}
     >
       {/* CONDENSED EXPLORER CONTAINER */}
-      <div className="relative w-full max-w-[850px] h-[580px] bg-[#0a0a0a] border border-white/20 flex flex-col shadow-[0_30px_60px_rgba(0,0,0,0.9)] overflow-hidden font-mono text-white/90">
+      <div className="relative w-full max-w-[850px] h-full sm:h-[580px] bg-[#0a0a0a] border-x-0 sm:border border-white/20 flex flex-col shadow-[0_30px_60px_rgba(0,0,0,0.9)] overflow-hidden font-mono text-white/90">
         
         {/* TITLE BAR - Minimal */}
         <div className="h-10 bg-white/5 border-b border-white/10 flex items-center justify-between px-5 shrink-0 select-none">
@@ -99,8 +99,8 @@ export default function ServicesDetailCard() {
         <div className="flex-1 flex flex-col overflow-hidden">
            
            {/* FOLDER ROW - Small icons */}
-           <div className="py-8 px-12 border-b border-white/5 bg-white/[0.01]">
-              <div className="flex flex-row justify-around items-start gap-4">
+           <div className="py-4 sm:py-8 px-4 sm:px-12 border-b border-white/5 bg-white/[0.01] overflow-x-auto custom-scrollbar no-scrollbar">
+              <div className="flex flex-row justify-start sm:justify-around items-start gap-8 sm:gap-4 min-w-max sm:min-w-0">
                  {SERVICES_DATA.map((service, idx) => (
                    <div 
                      key={service.id}
@@ -108,16 +108,16 @@ export default function ServicesDetailCard() {
                      onMouseLeave={() => setHoveredIndex(null)}
                      onClick={() => setSelectedIndex(idx)}
                      data-cursor="expand"
-                     className={`flex flex-col items-center gap-2 w-24 cursor-pointer transition-all duration-300 ${selectedIndex === idx ? 'opacity-100 scale-110' : 'opacity-20 hover:opacity-60'}`}
+                     className={`flex flex-col items-center gap-2 w-20 sm:w-24 cursor-pointer transition-all duration-300 ${selectedIndex === idx ? 'opacity-100 scale-110' : 'opacity-20 hover:opacity-60'}`}
                    >
-                      <div className="w-12 h-12 relative">
+                      <div className="w-10 h-10 sm:w-12 sm:h-12 relative">
                          <img 
                            src={hoveredIndex === idx || selectedIndex === idx ? "/services/folder-open-no-bg.png" : "/services/folder-close-no-bg.png"} 
                            alt="Folder"
                            className="w-full h-full object-contain transition-all"
                          />
                       </div>
-                      <span className={`text-[8px] uppercase tracking-[0.2em] font-bold text-center leading-tight transition-colors ${selectedIndex === idx ? 'text-white' : 'text-white/30'}`}>
+                      <span className={`text-[7px] sm:text-[8px] uppercase tracking-[0.2em] font-bold text-center leading-tight transition-colors ${selectedIndex === idx ? 'text-white' : 'text-white/30'}`}>
                          {service.title}
                       </span>
                    </div>
@@ -126,15 +126,15 @@ export default function ServicesDetailCard() {
            </div>
 
            {/* CONTENT AREA - HUD Terminal Style */}
-           <div className="flex-1 px-12 overflow-y-auto custom-scrollbar flex flex-col items-center">
-              <div className="max-w-2xl w-full my-auto space-y-8 fade-in py-12" key={currentDisplayIndex}>
+           <div className="flex-1 px-6 sm:px-12 overflow-y-auto custom-scrollbar flex flex-col items-center">
+              <div className="max-w-2xl w-full my-auto space-y-6 sm:space-y-8 fade-in py-8 sm:py-12" key={currentDisplayIndex}>
                  <div className="space-y-4">
                     <div className="flex items-center justify-center gap-4">
                        <div className="h-[0.5px] w-8 bg-white/10" />
                        <span className="text-[9px] tracking-[0.6em] text-white/20 uppercase">TARGET_MODULE_{currentService.id}</span>
                        <div className="h-[0.5px] w-8 bg-white/10" />
                     </div>
-                    <h3 className="text-3xl font-display uppercase tracking-tighter italic leading-none text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.2)] text-center">
+                    <h3 className="text-2xl sm:text-3xl font-display uppercase tracking-tighter italic leading-none text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.2)] text-center">
                        {currentService.title}
                     </h3>
                  </div>
@@ -146,8 +146,8 @@ export default function ServicesDetailCard() {
                     <div className="absolute -bottom-2 -left-2 w-4 h-4 border-b border-l border-white/30 pointer-events-none z-10" />
                     <div className="absolute -bottom-2 -right-2 w-4 h-4 border-b border-r border-white/30 pointer-events-none z-10" />
 
-                    <div className="relative border border-white/5 bg-white/[0.01] max-h-[160px] overflow-y-auto custom-scrollbar p-6">
-                        <p className="font-mono text-[10px] text-white/70 leading-relaxed uppercase tracking-[0.25em] text-center max-w-[440px] mx-auto drop-shadow-[0_0_2px_rgba(255,255,255,0.3)]">
+                    <div className="relative border border-white/5 bg-white/[0.01] max-h-[160px] sm:max-h-none overflow-y-auto sm:overflow-visible custom-scrollbar p-5 sm:p-6">
+                        <p className="font-mono text-[9px] sm:text-[10px] text-white/70 leading-relaxed uppercase tracking-[0.25em] text-center max-w-[440px] mx-auto drop-shadow-[0_0_2px_rgba(255,255,255,0.3)]">
                            {currentService.description}
                         </p>
                     </div>
@@ -155,7 +155,7 @@ export default function ServicesDetailCard() {
 
                  <div className="flex flex-wrap justify-center gap-2 pt-2">
                     {currentService.tags.map((tag) => (
-                      <span key={tag} className="px-3 py-1 border border-white/5 bg-white/[0.01] text-[8px] tracking-[0.4em] uppercase text-white/30 hover:text-green-400 hover:border-green-500/30 transition-all cursor-default">
+                      <span key={tag} className="px-2 sm:px-3 py-1 border border-white/5 bg-white/[0.01] text-[7px] sm:text-[8px] tracking-[0.4em] uppercase text-white/30 hover:text-green-400 hover:border-green-500/30 transition-all cursor-default">
                          {tag}
                       </span>
                     ))}
@@ -166,12 +166,12 @@ export default function ServicesDetailCard() {
 
         {/* STATUS BAR */}
         <div className="h-8 bg-white/5 border-t border-white/10 flex items-center justify-between px-5 shrink-0 text-[7px] uppercase tracking-[0.5em] text-white/15">
-           <div className="flex items-center gap-8">
+           <div className="flex items-center gap-4 sm:gap-8">
               <span>{SERVICES_DATA.length} OBJECTS</span>
-              <span className="w-[1px] h-3 bg-white/10" />
-              <span>{hoveredIndex !== null ? 'TARGET_LOCKED' : 'SYSTEM_IDLE'}</span>
+              <span className="hidden sm:inline w-[1px] h-3 bg-white/10" />
+              <span className="hidden sm:inline">{hoveredIndex !== null ? 'TARGET_LOCKED' : 'SYSTEM_IDLE'}</span>
            </div>
-           <div className="flex items-center gap-6">
+           <div className="flex items-center gap-4 sm:gap-6">
               <button 
                 onClick={() => {
                   setIsServicesDetail(false);
@@ -179,7 +179,7 @@ export default function ServicesDetailCard() {
                 }}
                 className="hover:text-green-400 transition-colors cursor-pointer tracking-[0.6em] font-bold"
               >
-                [ SEND_ENQUIRY ]
+                [ ENQUIRY ]
               </button>
               <span className="w-[1px] h-3 bg-white/10" />
               <div className="w-2 h-2 rounded-full border border-white/20 bg-green-500/20 shadow-[0_0_8px_rgba(34,197,94,0.2)] animate-pulse" />

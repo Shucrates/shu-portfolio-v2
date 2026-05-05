@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
+import Image from 'next/image';
 import { usePortfolioStore } from '@/store/usePortfolioStore';
 
 export default function ContactDetailCard() {
@@ -27,7 +28,7 @@ export default function ContactDetailCard() {
       // Animate phone to center
       gsap.fromTo(phoneRef.current,
         { y: -150, opacity: 0, scale: 0.9 },
-        { y: 0, opacity: 1, scale: 1.2, duration: 1.2, ease: 'power2.out' }
+        { y: 0, opacity: 1, scale: window.innerWidth < 768 ? 0.9 : 1.2, duration: 1.2, ease: 'power2.out' }
       );
 
       // Animate frames (Flip open)
@@ -46,7 +47,7 @@ export default function ContactDetailCard() {
           // Add floating animation to the last frame
           if (phoneRef.current) {
             gsap.to(phoneRef.current, {
-              y: -20,
+              y: -15,
               duration: 2.5,
               repeat: -1,
               yoyo: true,
@@ -133,41 +134,42 @@ export default function ContactDetailCard() {
   return (
     <div 
       ref={containerRef}
-      className={`fixed inset-0 z-[110] flex items-center justify-center bg-[#000] ${isContactDetail ? 'pointer-events-auto' : 'pointer-events-none'}`}
+      className={`fixed inset-0 z-[110] flex items-center justify-center bg-[#000] overflow-y-auto custom-scrollbar ${isContactDetail ? 'pointer-events-auto' : 'pointer-events-none'}`}
       style={{ opacity: 0 }}
     >
-        {/* CLOSE BUTTON REMOVED FROM TOP RIGHT AS PER REQUEST */}
-
-        <div className="relative w-full h-full flex items-center justify-center">
+        <div className="relative w-full min-h-screen md:h-full flex items-center justify-center p-6 md:p-0">
             
-            {/* THE PHONE ANIMATION - CENTERED AGAIN */}
-            <div ref={phoneRef} className="relative w-[340px] h-[540px] flex items-center justify-center z-10">
-                <img 
+            {/* THE PHONE ANIMATION - CENTERED */}
+            <div ref={phoneRef} className="absolute md:relative w-[280px] h-[480px] md:w-[340px] md:h-[540px] flex items-center justify-center z-10 transition-all duration-700">
+                <Image 
                     src={framePath} 
                     alt="Flip Phone" 
-                    className="w-full h-full object-contain grayscale brightness-125 contrast-125 transition-all duration-300"
+                    fill
+                    sizes="(max-width: 768px) 280px, 340px"
+                    className="object-contain grayscale brightness-125 contrast-125 transition-all duration-300"
+                    priority
                 />
             </div>
 
-            {/* CONTACT INFO - HUD Wings Restored */}
-            <div className={`absolute inset-0 flex items-center justify-center z-20 transition-all duration-1000 ${showInfo ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'}`}>
+            {/* CONTACT INFO - HUD Wings Restored (Stacked on Mobile) */}
+            <div className={`relative md:absolute inset-0 flex flex-col md:flex-row items-center justify-center z-20 transition-all duration-1000 py-20 md:py-0 ${showInfo ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'}`}>
                
                {/* LEFT WING - Personal */}
-               <div className="absolute left-[8%] xl:left-[12%] top-1/2 -translate-y-1/2 space-y-12">
+               <div className="flex flex-col items-center md:items-start md:absolute md:left-[8%] xl:left-[12%] md:top-1/2 md:-translate-y-1/2 space-y-8 md:space-y-12 mb-12 md:mb-0 w-full md:w-auto px-6">
                   <ContactItem label="COMM_LINK" value="shubhamnileshpatil@gmail.com" link="mailto:shubhamnileshpatil@gmail.com" />
                   <ContactItem label="VISUAL_GRID" value="INSTAGRAM" link="https://www.instagram.com/shuisbored/" />
                   <ContactItem label="DATA_STREAM" value="LINKEDIN" link="https://www.linkedin.com/in/shubhamnileshpatil/" />
                </div>
 
                {/* RIGHT WING - Socials */}
-               <div className="absolute right-[8%] xl:right-[12%] top-1/2 -translate-y-1/2 space-y-12">
+               <div className="flex flex-col items-center md:items-end md:absolute md:right-[8%] xl:right-[12%] md:top-1/2 md:-translate-y-1/2 space-y-8 md:space-y-12 w-full md:w-auto px-6">
                   <ContactItem label="CODE_HUB" value="GITHUB" link="https://github.com/Shucrates" />
                   <ContactItem label="DOSSIER" value="RESUME" link="/Shubham_Patil_CV.pdf" />
                   <ContactItem label="COORDINATES" value="MUMBAI, INDIA" />
                </div>
 
                {/* BOTTOM WING - Hang Up */}
-               <div className="absolute bottom-[8%] left-1/2 -translate-x-1/2 text-center">
+               <div className="relative md:absolute bottom-[8%] left-1/2 md:-translate-x-1/2 text-center mt-12 md:mt-0">
                   <div className="flex flex-col items-center gap-4">
                      <div className="h-[1px] w-32 bg-white/10" />
                      <button 
@@ -198,23 +200,23 @@ export default function ContactDetailCard() {
 
 function ContactItem({ label, value, link }: { label: string, value: string, link?: string }) {
    return (
-      <div className="group space-y-3">
-         <div className="flex items-center gap-4">
+      <div className="group space-y-3 w-full text-center md:text-left">
+         <div className="flex items-center justify-center md:justify-start gap-4">
             <div className="w-1.5 h-1.5 bg-white/40 rotate-45" />
             <span className="text-[9px] tracking-[0.6em] text-white/30 uppercase font-bold">{label}</span>
-            <div className="h-[1px] flex-1 min-w-[40px] bg-white/10 group-hover:bg-white/30 transition-all duration-700" />
+            <div className="hidden md:block h-[1px] flex-1 min-w-[40px] bg-white/10 group-hover:bg-white/30 transition-all duration-700" />
          </div>
          {link ? (
             <a 
                href={link} 
                target="_blank" 
                data-cursor="expand"
-               className="block text-xl sm:text-2xl font-mono uppercase tracking-[0.1em] text-white/60 hover:text-white hover:translate-x-2 transition-all duration-500"
+               className="block text-lg sm:text-2xl font-mono uppercase tracking-[0.1em] text-white/60 hover:text-white md:hover:translate-x-2 transition-all duration-500 break-all px-4 md:px-0"
             >
                {value}
             </a>
          ) : (
-            <span className="block text-xl sm:text-2xl font-mono uppercase tracking-[0.1em] text-white/60">
+            <span className="block text-lg sm:text-2xl font-mono uppercase tracking-[0.1em] text-white/60 px-4 md:px-0">
                {value}
             </span>
          )}

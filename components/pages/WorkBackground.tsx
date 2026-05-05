@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
+import Image from 'next/image';
 import { usePortfolioStore } from '@/store/usePortfolioStore';
 
 const POSTERS = [
@@ -36,24 +37,25 @@ export default function WorkBackground() {
   const isWorkDetail = usePortfolioStore((state) => state.isWorkDetail);
   const [randomizedImages, setRandomizedImages] = useState<any[]>([]);
 
-  // Shuffle images through exactly the same layout slots every time 'work' opens
   useEffect(() => {
     if (activePage === 'work') {
       if (randomizedImages.length === 0) {
+        const isMobile = window.innerWidth < 768;
+        const slotsToUse = isMobile ? LAYOUT_SLOTS.slice(0, 5) : LAYOUT_SLOTS;
         const shuffled = [...POSTERS].sort(() => Math.random() - 0.5);
-        const mapped = LAYOUT_SLOTS.map((slot, index) => ({
+        const mapped = slotsToUse.map((slot, index) => ({
           ...slot,
           src: shuffled[index] || shuffled[0], 
+          width: isMobile ? slot.width * 0.7 : slot.width,
+          height: isMobile ? slot.height * 0.7 : slot.height,
         }));
         setRandomizedImages(mapped);
       }
     } else {
-      // Clear out local state when leaving so it guarantees fresh pop-in next time
       setRandomizedImages([]);
     }
   }, [activePage]);
 
-  // Entrance Stagger Animation & Collapse Animation
   useEffect(() => {
     if (activePage === 'work' && containerRef.current && randomizedImages.length > 0) {
       const domImages = containerRef.current.querySelectorAll('.work-image');
@@ -74,17 +76,11 @@ export default function WorkBackground() {
           overwrite: true
         });
       } else {
-        // Kill previous tweens but ONLY those that affect layout/entrance. 
-        // We want to avoid killing the parallax x/y/rotation tweens if possible, 
-        // but since we are resetting everything for a clean entrance, we'll kill them and let the next useEffect re-init them.
         gsap.killTweensOf(domImages); 
-        
-        // Reset ALL physical position overrides instantly so they are back in their React-defined slots
         gsap.set(domImages, { 
           clearProps: "top,left,x,y,xPercent,yPercent,scale,opacity,transform" 
         });
 
-        // Now play the standard entrance stagger exactly like the first time the page opens
         gsap.fromTo(domImages, 
           { opacity: 0, scale: 0.9 }, 
           { 
@@ -100,16 +96,13 @@ export default function WorkBackground() {
     }
   }, [activePage, randomizedImages, isWorkDetail]);
 
-  // High-performance Parallax GSAP tracker 
   useEffect(() => {
-    // We delay the parallax re-initialization slightly to ensure the entrance animation has started/cleared props
     if (activePage !== 'work' || isWorkDetail || !containerRef.current || randomizedImages.length === 0) return;
 
     const domImages = containerRef.current.querySelectorAll('.work-image');
     const trackers: { xTo: any; yTo: any; depth: number }[] = [];
     let handleMouseMove: (e: MouseEvent) => void;
 
-    // Use a small timeout to let the entrance state settle
     const timer = setTimeout(() => {
       domImages.forEach((img) => {
         trackers.push({
@@ -142,17 +135,18 @@ export default function WorkBackground() {
     };
   }, [activePage, randomizedImages, isWorkDetail]);
 
+  if (activePage !== 'work') return null;
+
   return (
     <div 
       ref={containerRef} 
-      className={`absolute inset-0 w-full h-full overflow-hidden pointer-events-none z-10 ${activePage === 'work' ? 'block' : 'hidden'}`}
+      className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none z-10"
     >
       {randomizedImages.map((img) => (
         <div
           key={img.id}
           data-cursor="expand"
-          // CRITICAL FIX: transition-all destroyed GSAP's physical hardware transforms. Only transition filter/opacity!
-          className="work-image absolute pointer-events-auto bg-neutral-900 shadow-2xl grayscale hover:grayscale-0 transition-[filter,z-index] duration-700 hover:z-20 cursor-pointer"
+          className="work-image absolute pointer-events-auto bg-neutral-900 shadow-2xl grayscale hover:grayscale-0 transition-[filter,z-index] duration-700 hover:z-20 cursor-pointer overflow-hidden"
           data-depth={img.depth}
           data-opacity={img.opacity}
           style={{
@@ -163,12 +157,19 @@ export default function WorkBackground() {
             width: `${img.width}px`,
             height: `${img.height}px`,
             opacity: img.opacity,
-            backgroundImage: `url("${encodeURI(img.src)}")`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
             border: '0.5px solid rgba(255, 255, 255, 0.15)'
           }}
-        />
+        >
+          <Image
+            src={img.src}
+            alt="Work Poster"
+            fill
+            sizes={`${img.width}px`}
+            className="object-cover"
+            priority={img.depth < 0.5}
+            loading={img.depth >= 0.5 ? 'lazy' : undefined}
+          />
+        </div>
       ))}
     </div>
   );

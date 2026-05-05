@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
+import Image from 'next/image';
 import { usePortfolioStore } from '@/store/usePortfolioStore';
 
 const PROJECTS = [
@@ -195,14 +196,26 @@ export default function WorkProjectsList() {
          LIST VIEW 
       */}
       <div className={`absolute inset-0 flex flex-col md:flex-row transition-all duration-700 ease-[cubic-bezier(0.19,1,0.22,1)] ${isDetailView ? 'opacity-0 scale-95 pointer-events-none' : 'opacity-100 scale-100'}`}>
+        
+        {/* TOP CONTROLS FOR MOBILE */}
+        <div className="md:hidden pt-24 px-6 flex justify-between items-center z-50">
+           <button 
+              onClick={() => usePortfolioStore.getState().setIsWorkDetail(false)}
+              className="text-[10px] font-mono tracking-widest text-white/40 uppercase hover:text-white"
+            >
+              [ BACK ]
+            </button>
+            <div className="text-[10px] font-mono text-white/20">WORKSPACE://PROJECTS</div>
+        </div>
+
         {/* LEFT SIDE: SCROLLABLE PROJECT LIST */}
-        <div className="w-full md:w-1/2 h-full overflow-y-auto custom-scrollbar pt-12 pb-64 px-6 sm:px-16 flex flex-col items-start">
+        <div className="w-full md:w-1/2 h-full overflow-y-auto custom-scrollbar pt-12 md:pt-12 pb-64 px-6 sm:px-16 flex flex-col items-start">
           <div className="w-full max-w-[600px]">
-            {/* NON-STICKY RETURN BUTTON */}
+            {/* DESKTOP RETURN BUTTON */}
             <button 
               onClick={() => usePortfolioStore.getState().setIsWorkDetail(false)}
               data-cursor="expand"
-              className="group flex items-center gap-3 py-2 px-4 border border-white/10 bg-white/5 hover:border-white/40 transition-colors mb-16 pointer-events-auto"
+              className="hidden md:flex group items-center gap-3 py-2 px-4 border border-white/10 bg-white/5 hover:border-white/40 transition-colors mb-16 pointer-events-auto"
             >
               <span className="font-mono text-[9px] tracking-[0.3em] text-white/40 uppercase group-hover:text-white transition-colors">
                 [ RETURN_TO_ROOT ]
@@ -210,7 +223,7 @@ export default function WorkProjectsList() {
               <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse shadow-[0_0_5px_rgba(34,197,94,0.5)]" />
             </button>
 
-            <div className="font-mono text-[10px] text-white/20 mb-12 flex items-center justify-between border-b border-white/10 pb-2">
+            <div className="hidden md:flex font-mono text-[10px] text-white/20 mb-12 items-center justify-between border-b border-white/10 pb-2">
                <span>DIRECTORY: \\ROOT\\WORKSPACE\\PROJECTS</span>
                <span className="animate-pulse">_</span>
             </div>
@@ -223,7 +236,18 @@ export default function WorkProjectsList() {
               </div>
               <div className="flex flex-col gap-1 w-full">
                 {WEBSITE_PROJECTS.map((p) => (
-                  <TerminalItem key={p.id} project={p} isActive={currentProject.id === p.id} onHover={() => changeChannel(PROJECTS.indexOf(p))} />
+                  <TerminalItem 
+                    key={p.id} 
+                    project={p} 
+                    isActive={currentProject.id === p.id} 
+                    onHover={() => changeChannel(PROJECTS.indexOf(p))} 
+                    onClick={() => {
+                        changeChannel(PROJECTS.indexOf(p));
+                        if (window.innerWidth < 768) {
+                            setTimeout(() => setIsDetailView(true), 300);
+                        }
+                    }}
+                  />
                 ))}
               </div>
             </section>
@@ -236,16 +260,42 @@ export default function WorkProjectsList() {
               </div>
               <div className="flex flex-col gap-1 w-full">
                 {POSTER_PROJECTS.map((p) => (
-                  <TerminalItem key={p.id} project={p} isActive={currentProject.id === p.id} onHover={() => changeChannel(PROJECTS.indexOf(p))} />
+                  <TerminalItem 
+                    key={p.id} 
+                    project={p} 
+                    isActive={currentProject.id === p.id} 
+                    onHover={() => changeChannel(PROJECTS.indexOf(p))} 
+                    onClick={() => {
+                        changeChannel(PROJECTS.indexOf(p));
+                        if (window.innerWidth < 768) {
+                            setTimeout(() => setIsDetailView(true), 300);
+                        }
+                    }}
+                  />
                 ))}
               </div>
             </section>
           </div>
         </div>
 
-        {/* RIGHT SIDE: PROJECT INFO */}
-        <div className="hidden md:flex w-1/2 h-full relative overflow-hidden">
-          <div className="absolute top-32 right-12 left-12 flex flex-col items-end pointer-events-none">
+        {/* RIGHT SIDE: PROJECT INFO (Responsive Monitor) */}
+        <div className="w-full md:w-1/2 h-full relative overflow-hidden flex flex-col items-center md:items-end p-6 md:p-0">
+          
+          {/* MOBILE PREVIEW TEXT */}
+          <div className="md:hidden w-full mb-8 text-center">
+             <h2 className="font-display text-4xl mb-2 tracking-tighter uppercase leading-none">{currentProject.name}</h2>
+             <div className="font-mono text-[9px] text-white/40 tracking-[0.3em] uppercase mb-4">
+                {currentProject.type} // MODULE_{currentProject.id}
+             </div>
+             <button 
+                onClick={() => setIsDetailView(true)}
+                className="font-mono text-[10px] tracking-widest uppercase text-white/60 border border-white/20 px-6 py-2"
+             >
+                [ VIEW_CASE_STUDY ]
+             </button>
+          </div>
+
+          <div className="hidden md:flex absolute top-32 right-12 left-12 flex flex-col items-end pointer-events-none">
             <div className={`w-full max-w-[450px] text-right transition-all duration-500 pointer-events-auto ${isChanging ? 'opacity-0 translate-x-4' : 'opacity-100 translate-x-0'}`}>
               <h2 className="font-display text-4xl mb-4 tracking-tighter uppercase leading-none">{currentProject.name}</h2>
               <div className="font-mono text-[10px] text-white/40 tracking-[0.3em] uppercase mb-6 flex items-center justify-end gap-3">
@@ -267,11 +317,11 @@ export default function WorkProjectsList() {
             </div>
           </div>
           
-          {/* THE MONITOR (Shared Component-like structure) */}
+          {/* THE MONITOR */}
           <div 
             onClick={() => setIsDetailView(true)}
             data-cursor="expand"
-            className="absolute bottom-4 right-4 w-[350px] h-[350px] flex items-center justify-center select-none cursor-pointer z-50 transition-transform duration-500 hover:scale-105 group/monitor pointer-events-auto"
+            className="relative md:absolute bottom-4 md:bottom-4 right-auto md:right-4 w-[280px] h-[280px] sm:w-[320px] sm:h-[320px] md:w-[350px] md:h-[350px] flex items-center justify-center select-none cursor-pointer z-50 transition-transform duration-500 hover:scale-105 group/monitor pointer-events-auto"
           >
             <MonitorContent currentProject={currentProject} isChanging={isChanging} />
           </div>
@@ -281,44 +331,64 @@ export default function WorkProjectsList() {
       {/* 
          DETAIL VIEW (Overlay)
       */}
-      <div className={`absolute inset-0 z-50 transition-all duration-1000 ease-[cubic-bezier(0.19,1,0.22,1)] overflow-y-auto custom-scrollbar ${isDetailView ? 'opacity-100 translate-y-0 pointer-events-auto' : 'opacity-0 translate-y-20 pointer-events-none'}`}>
-        <div className="w-full min-h-full flex flex-col items-center pt-20 pb-40 px-6">
+      <div className={`absolute inset-0 z-50 transition-all duration-1000 ease-[cubic-bezier(0.19,1,0.22,1)] overflow-y-auto custom-scrollbar bg-black ${isDetailView ? 'opacity-100 translate-y-0 pointer-events-auto' : 'opacity-0 translate-y-20 pointer-events-none'}`}>
+        <div className="w-full min-h-full flex flex-col items-center pt-24 sm:pt-20 pb-40 px-6">
            {/* BACK BUTTON */}
            <button 
             onClick={() => setIsDetailView(false)}
             data-cursor="expand"
-            className="absolute top-10 left-10 group flex items-center gap-3 py-2 px-4 border border-white/10 bg-white/5 hover:border-white/40 transition-colors"
+            className="fixed top-6 left-6 md:absolute md:top-10 md:left-10 group flex items-center gap-3 py-2 px-4 border border-white/10 bg-black/80 md:bg-white/5 hover:border-white/40 transition-colors z-[70]"
           >
             <span className="font-mono text-[9px] tracking-[0.3em] text-white/40 uppercase group-hover:text-white transition-colors">
-              [ RETURN_TO_LIST ]
+              [ RETURN ]
             </span>
             <span className="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse shadow-[0_0_5px_rgba(239,68,68,0.5)]" />
           </button>
 
-          {/* MONITOR (Center Piece) */}
-          <div data-cursor="expand" className="w-[450px] h-[450px] relative mb-12 flex items-center justify-center scale-110 cursor-pointer">
-             <MonitorContent currentProject={currentProject} isChanging={isChanging} />
+          {/* MONITOR (Center Piece) WITH CIRCULAR NAV */}
+          <div className="relative mb-12 group/nav">
+             {/* PREV BUTTON */}
+             <button 
+                onClick={prevProject}
+                data-cursor="expand"
+                className="absolute -left-12 sm:-left-24 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-12 sm:h-12 rounded-full border border-white/10 bg-black/50 backdrop-blur-md flex items-center justify-center text-white/40 hover:text-white hover:border-white/40 transition-all z-[70] group"
+             >
+                <span className="text-xl transition-transform group-hover:-translate-x-1">←</span>
+             </button>
+
+             <div data-cursor="expand" className="w-[300px] h-[300px] sm:w-[450px] sm:h-[450px] relative flex items-center justify-center scale-100 sm:scale-110 cursor-pointer">
+                <MonitorContent currentProject={currentProject} isChanging={isChanging} />
+             </div>
+
+             {/* NEXT BUTTON */}
+             <button 
+                onClick={nextProject}
+                data-cursor="expand"
+                className="absolute -right-12 sm:-right-24 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-12 sm:h-12 rounded-full border border-white/10 bg-black/50 backdrop-blur-md flex items-center justify-center text-white/40 hover:text-white hover:border-white/40 transition-all z-[70] group"
+             >
+                <span className="text-xl transition-transform group-hover:translate-x-1">→</span>
+             </button>
           </div>
 
           {/* CONTENT */}
           <div className="w-full max-w-3xl text-center">
-             <h1 className="font-display text-5xl md:text-7xl mb-6 tracking-tighter uppercase leading-tight transition-all duration-700">
+             <h1 className="font-display text-4xl sm:text-5xl md:text-7xl mb-6 tracking-tighter uppercase leading-tight transition-all duration-700">
                {currentProject.name}
              </h1>
-             <div className="font-mono text-xs tracking-[0.6em] text-white/40 uppercase mb-12 flex items-center justify-center gap-4">
-                <span className="w-12 h-[1px] bg-white/10"></span>
+             <div className="font-mono text-[10px] sm:text-xs tracking-[0.4em] sm:tracking-[0.6em] text-white/40 uppercase mb-12 flex items-center justify-center gap-4">
+                <span className="w-8 sm:w-12 h-[1px] bg-white/10"></span>
                 {currentProject.type} // CHANNEL_{currentProject.id}
-                <span className="w-12 h-[1px] bg-white/10"></span>
+                <span className="w-8 sm:w-12 h-[1px] bg-white/10"></span>
              </div>
 
              <div className="grid grid-cols-1 md:grid-cols-2 gap-12 text-left mb-24">
-                <div className="space-y-8">
+                <div className="space-y-8 order-2 md:order-1">
                    <div className="space-y-4">
                       <div className="font-mono text-[10px] text-white/30 uppercase tracking-[0.4em] flex items-center gap-3">
                          <span className="w-8 h-[1px] bg-white/10" />
                          PROJECT_OVERVIEW
                       </div>
-                      <p className="font-mono text-sm text-white/80 leading-loose">
+                      <p className="font-mono text-xs sm:text-sm text-white/80 leading-loose">
                          {currentProject.details?.overview}
                       </p>
                    </div>
@@ -340,14 +410,14 @@ export default function WorkProjectsList() {
                    </div>
                 </div>
 
-                <div className="flex flex-col p-8 border border-white/5 bg-white/[0.01] h-full relative group">
+                <div className="flex flex-col p-6 sm:p-8 border border-white/5 bg-white/[0.01] h-full relative group order-1 md:order-2">
                    {/* HUD CORNER ACCENTS */}
                    <div className="absolute top-0 left-0 w-4 h-4 border-t border-l border-white/20" />
                    <div className="absolute top-0 right-0 w-4 h-4 border-t border-r border-white/20" />
                    <div className="absolute bottom-0 left-0 w-4 h-4 border-b border-l border-white/20" />
                    <div className="absolute bottom-0 right-0 w-4 h-4 border-b border-r border-white/20" />
 
-                   <div className="space-y-10">
+                   <div className="space-y-8 sm:space-y-10">
                       <div className="font-mono text-[10px] text-white/30 uppercase tracking-[0.4em] flex items-center gap-3">
                          <span className="w-8 h-[1px] bg-white/10" />
                          SYSTEM_HUD // TECH_SPECS
@@ -392,16 +462,16 @@ export default function WorkProjectsList() {
                 </div>
              </div>
 
-              {/* ADDITIONAL CASE STUDY SECTIONS (If available) */}
+              {/* ADDITIONAL CASE STUDY SECTIONS */}
               {currentProject.details?.caseStudy && (
-                <div className="w-full max-w-4xl mx-auto mb-32 text-left grid grid-cols-1 md:grid-cols-2 gap-16">
+                <div className="w-full max-w-4xl mx-auto mb-32 text-left grid grid-cols-1 md:grid-cols-2 gap-12 sm:gap-16">
                   {currentProject.details.caseStudy.map((section: any, idx: number) => (
                     <div key={idx} className="space-y-6">
                       <div className="font-mono text-[10px] text-white/30 uppercase tracking-[0.4em] flex items-center gap-3">
                         <span className="w-8 h-[1px] bg-white/10" />
                         {section.title.replace(/ /g, '_').toUpperCase()}
                       </div>
-                      <p className="font-mono text-xs text-white/70 leading-loose text-justify whitespace-pre-wrap">
+                      <p className="font-mono text-[11px] sm:text-xs text-white/70 leading-loose text-justify whitespace-pre-wrap">
                         {section.content}
                       </p>
                     </div>
@@ -411,25 +481,29 @@ export default function WorkProjectsList() {
 
               {/* PROJECT STILLS GALLERY */}
               {currentProject.details?.stills && currentProject.details.stills.length > 0 && (
-                <div className="flex flex-col gap-12 mb-40">
-                   <div className="font-mono text-[10px] text-white/30 uppercase tracking-[0.6em] flex items-center justify-center gap-6">
-                      <span className="w-24 h-[1px] bg-white/10" />
+                <div className="flex flex-col gap-12 mb-40 w-full">
+                   <div className="font-mono text-[10px] text-white/30 uppercase tracking-[0.4em] sm:tracking-[0.6em] flex items-center justify-center gap-4 sm:gap-6">
+                      <span className="w-12 sm:w-24 h-[1px] bg-white/10" />
                       VISUAL_ASSET_GALLERY
-                      <span className="w-24 h-[1px] bg-white/10" />
+                      <span className="w-12 sm:w-24 h-[1px] bg-white/10" />
                    </div>
                    
-                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
                       {currentProject.details.stills.map((still, idx) => (
                          <div 
                             key={idx}
                             data-cursor="expand"
                             className={`group relative overflow-hidden border border-white/10 bg-zinc-900 w-full h-auto ${idx === 0 ? 'md:col-span-2' : ''}`}
                          >
-                            <img 
-                               src={still} 
-                               alt={`${currentProject.name} Still ${idx + 1}`}
-                               className="w-full h-auto object-cover transition-transform duration-1000 grayscale hover:grayscale-0 contrast-125 hover:contrast-100"
-                            />
+                            <div className="relative w-full aspect-video">
+                              <Image 
+                                 src={still} 
+                                 alt={`${currentProject.name} Still ${idx + 1}`}
+                                 fill
+                                 sizes="(max-width: 768px) 100vw, 50vw"
+                                 className="object-cover transition-transform duration-1000 contrast-125 hover:contrast-100"
+                              />
+                            </div>
                             <div className="absolute top-4 left-4 font-mono text-[8px] text-white/40 tracking-widest uppercase bg-black/60 px-2 py-1">
                                MODULE_STILL_0{idx + 1}
                             </div>
@@ -441,36 +515,17 @@ export default function WorkProjectsList() {
 
               {/* GRAPHIC POSTER LARGE DISPLAY */}
               {currentProject.type === 'GRAPHIC' && currentProject.image && (
-                <div className="flex flex-col items-center gap-16 mb-40">
+                <div className="flex flex-col items-center gap-12 sm:gap-16 mb-40 w-full">
                    <div className="font-mono text-[10px] text-white/30 uppercase tracking-[0.6em] flex items-center justify-center gap-6">
-                      <span className="w-24 h-[1px] bg-white/10" />
+                      <span className="w-12 sm:w-24 h-[1px] bg-white/10" />
                       ART_ASSET_EXHIBITION
-                      <span className="w-24 h-[1px] bg-white/10" />
+                      <span className="w-12 sm:w-24 h-[1px] bg-white/10" />
                    </div>
                    <PosterCard src={currentProject.image} name={currentProject.name} />
                 </div>
               )}
            </div>
 
-          {/* PROJECT SURFING */}
-          <div className="absolute top-[250px] inset-x-0 px-4 md:px-20 flex justify-between pointer-events-none z-[60]">
-             <button 
-                onClick={prevProject}
-                data-cursor="expand"
-                className={`${isDetailView ? 'pointer-events-auto' : 'pointer-events-none'} group flex items-center gap-3 py-2 px-4 border border-white/10 bg-black/50 backdrop-blur-md hover:border-white/40 transition-all`}
-             >
-                <span className="text-xl transition-transform group-hover:-translate-x-1">←</span>
-                <span className="font-mono text-[9px] text-white/40 tracking-[0.3em] uppercase group-hover:text-white transition-colors">[ PREV_MODULE ]</span>
-             </button>
-             <button 
-                onClick={nextProject}
-                data-cursor="expand"
-                className={`${isDetailView ? 'pointer-events-auto' : 'pointer-events-none'} group flex items-center gap-3 py-2 px-4 border border-white/10 bg-black/50 backdrop-blur-md hover:border-white/40 transition-all`}
-             >
-                <span className="font-mono text-[9px] text-white/40 tracking-[0.3em] uppercase group-hover:text-white transition-colors">[ NEXT_MODULE ]</span>
-                <span className="text-2xl transition-transform group-hover:translate-x-1">→</span>
-             </button>
-          </div>
         </div>
       </div>
     </div>
@@ -489,15 +544,17 @@ function MonitorContent({ currentProject, isChanging }: { currentProject: any, i
                 <source src={currentProject.video} type="video/mp4" />
               </video>
             ) : currentProject.image ? (
-              <img 
+              <Image 
                 src={currentProject.image} 
                 alt={currentProject.name} 
-                className="w-full h-full object-cover opacity-100 transition-all duration-700 grayscale contrast-110 group-hover/monitor:grayscale-0 group-hover/monitor:contrast-100" 
+                fill
+                sizes="(max-width: 768px) 300px, 450px"
+                className="object-cover opacity-100 transition-all duration-700 contrast-110 group-hover/monitor:contrast-100" 
               />
             ) : (
               <div className="w-full h-full flex flex-col items-center justify-center bg-zinc-950 font-mono text-white/40">
                 <div className="text-[60px] font-black opacity-5 blur-sm absolute">{currentProject.id}</div>
-                <div className="text-xl tracking-[0.5em] mb-4 animate-pulse text-center px-4">{currentProject.preview}</div>
+                <div className="text-lg sm:text-xl tracking-[0.5em] mb-4 animate-pulse text-center px-4">{currentProject.preview}</div>
                 <div className="text-[7px] tracking-widest opacity-20 uppercase font-bold">Signal_Stable / 100%</div>
               </div>
             )}
@@ -509,9 +566,9 @@ function MonitorContent({ currentProject, isChanging }: { currentProject: any, i
           <div className="absolute inset-0 pointer-events-none shadow-[inset_0_0_80px_rgba(0,0,0,1)]" />
           <div className="absolute inset-0 pointer-events-none bg-[#282A2F]/20 mix-blend-screen" />
 
-          <div className="absolute top-8 left-8 font-mono text-white/60 text-[9px] tracking-widest font-bold">
-             <div className="flex items-center gap-2 mb-1">
-                <span className="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse shadow-[0_0_5px_red]" />
+          <div className="absolute top-4 sm:top-8 left-4 sm:left-8 font-mono text-white/60 text-[7px] sm:text-[9px] tracking-widest font-bold">
+             <div className="flex items-center gap-1 sm:gap-2 mb-1">
+                <span className="w-1 sm:w-1.5 h-1 sm:h-1.5 bg-red-500 rounded-full animate-pulse shadow-[0_0_5px_red]" />
                 <span>PLAY</span>
              </div>
              <div>CH {currentProject.id}</div>
@@ -529,18 +586,21 @@ function MonitorContent({ currentProject, isChanging }: { currentProject: any, i
   );
 }
 
-function TerminalItem({ project, isActive, onHover }: { project: any, isActive: boolean, onHover: () => void }) {
+function TerminalItem({ project, isActive, onHover, onClick }: { project: any, isActive: boolean, onHover: () => void, onClick: () => void }) {
   return (
     <div 
       onMouseEnter={onHover}
+      onClick={onClick}
       data-cursor="expand"
-      className={`group flex items-center py-2 px-4 cursor-pointer transition-all font-mono text-xs border-l-2 ${isActive ? 'bg-white text-black border-white' : 'text-white/30 hover:text-white/80 hover:bg-white/2 border-transparent'}`}
+      className={`group flex items-center py-2.5 px-4 cursor-pointer transition-all font-mono text-xs border-l-2 ${isActive ? 'bg-white text-black border-white' : 'text-white/30 hover:text-white/80 hover:bg-white/2 border-transparent'}`}
     >
       <span className="mr-6">{isActive ? '>' : '$'}</span>
-      <span className="flex-1 tracking-[0.2em] uppercase font-bold">{project.name}</span>
-      <span className={`text-[9px] opacity-60 ml-4 hidden sm:inline ${isActive ? 'text-black/90' : ''}`}>
-        [ {project.type} ]
-      </span>
+      <div className="flex-1 flex flex-col sm:flex-row sm:items-center">
+         <span className="tracking-[0.2em] uppercase font-bold">{project.name}</span>
+         <span className={`text-[8px] sm:text-[9px] opacity-60 sm:ml-4 ${isActive ? 'text-black/90' : ''}`}>
+            [ {project.type} ]
+         </span>
+      </div>
       {isActive && <span className="ml-4 animate-pulse text-green-500">■</span>}
     </div>
   );
@@ -552,7 +612,7 @@ function HUDBar({ label, value }: { label: string, value: number }) {
         <span className="text-white/40">{label}</span>
         <span className="text-white/60">{value * 10}%</span>
       </div>
-      <div className="flex gap-1 h-2">
+      <div className="flex gap-1 h-1.5 sm:h-2">
         {[...Array(12)].map((_, i) => (
           <div 
             key={i} 
@@ -612,21 +672,25 @@ function PosterCard({ src, name }: { src: string, name: string }) {
 
   return (
     <div 
-      className="relative perspective-1000 w-fit mx-auto"
+      className="relative perspective-1000 w-full max-w-[500px] mx-auto"
       style={{ perspective: '1000px' }}
     >
       <div 
         ref={cardRef}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
-        className="relative bg-zinc-950 border border-white/10 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.7)] overflow-hidden group transition-shadow duration-500 hover:shadow-[0_50px_100px_-20px_rgba(0,0,0,0.8)]"
+        className="relative bg-zinc-950 border border-white/10 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.7)] overflow-hidden group transition-shadow duration-500 hover:shadow-[0_50px_100px_-20px_rgba(0,0,0,0.8)] mx-auto"
         style={{ transformStyle: 'preserve-3d' }}
       >
-        <img 
-          src={src} 
-          alt={name} 
-          className="max-w-[600px] w-full h-auto pointer-events-none block" 
-        />
+        <div className="relative w-full aspect-[2/3]">
+          <Image 
+            src={src} 
+            alt={name} 
+            fill
+            sizes="(max-width: 768px) 100vw, 500px"
+            className="object-contain pointer-events-none block" 
+          />
+        </div>
         
         {/* GLOW EFFECT */}
         <div 
@@ -635,14 +699,14 @@ function PosterCard({ src, name }: { src: string, name: string }) {
         />
 
         {/* OVERLAY CONTENT */}
-        <div className="absolute inset-0 border-[15px] border-black/40 pointer-events-none" />
+        <div className="absolute inset-0 border-[10px] sm:border-[15px] border-black/40 pointer-events-none" />
         <div className="absolute inset-0 bg-gradient-to-tr from-black/40 via-transparent to-white/5 pointer-events-none" />
         
-        <div className="absolute top-6 left-6 font-mono text-[8px] text-white/30 tracking-[0.4em] uppercase pointer-events-none">
+        <div className="absolute top-4 left-4 sm:top-6 sm:left-6 font-mono text-[7px] sm:text-[8px] text-white/30 tracking-[0.4em] uppercase pointer-events-none">
           ARCHIVE_RECORD // 0{name.length}
         </div>
         
-        <div className="absolute bottom-6 right-6 font-mono text-[8px] text-white/30 tracking-[0.4em] uppercase text-right pointer-events-none">
+        <div className="absolute bottom-4 right-4 sm:bottom-6 sm:right-6 font-mono text-[7px] sm:text-[8px] text-white/30 tracking-[0.4em] uppercase text-right pointer-events-none">
           {name}<br/>
           EXHIBIT_A
         </div>

@@ -69,43 +69,76 @@ export default function Home() {
       {/* Top Bar Line */}
       <div className="absolute top-0 left-0 w-full h-[1px] bg-white opacity-20 z-50"></div>
 
-      {/* Top Bar Content */}
-      <div className={`absolute top-6 w-full flex flex-row justify-between items-start px-8 mix-blend-difference z-50 transition-opacity duration-500 ${isAnyDetailActive ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
-        
-        {/* Top-left Snowflake */}
-        <div 
-          onClick={() => {
-            setLockedPage(null);
-            setActivePage('home');
-          }}
-          data-cursor="expand" 
-          className="text-4xl leading-none font-bold mt-[-8px] select-none p-2 cursor-pointer z-50 text-white"
-        >
-          *
+        {/* Top Bar Content */}
+        <div className={`absolute top-4 sm:top-6 w-full flex flex-row justify-between items-start px-4 sm:px-8 mix-blend-difference z-50 transition-opacity duration-500 ${isAnyDetailActive ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
+          
+          {/* Top-left Snowflake */}
+          <div 
+            onClick={() => {
+              setLockedPage(null);
+              setActivePage('home');
+            }}
+            data-cursor="expand" 
+            className="text-2xl sm:text-4xl leading-none font-bold mt-[-4px] sm:mt-[-8px] select-none p-2 cursor-pointer z-50 text-white"
+          >
+            *
+          </div>
+
+          {/* Top Center Text */}
+          <div data-cursor="expand" className="flex flex-col items-center justify-center font-mono text-[9px] sm:text-xs tracking-widest text-[#a3a3a3] uppercase p-1 sm:p-3 text-center">
+            <div className="flex flex-wrap justify-center gap-x-4 gap-y-1">
+              <span className="text-white">Location: India</span>
+              <span className="hidden sm:inline">Age: 21YR</span>
+            </div>
+            <span className="mt-1 text-white/50 tabular-nums font-semibold tracking-widest">
+              {time ? `${time} IST` : '--:--:-- IST'}
+            </span>
+          </div>
+
+          {/* Top-right Placeholder - Can be used for a mobile menu toggle if needed later */}
+          <div className="w-8 sm:w-10 h-8 sm:h-10" aria-hidden="true" />
         </div>
 
-        {/* Top Center Text */}
-        <div data-cursor="expand" className="flex flex-col items-center justify-center font-mono text-xs tracking-widest text-[#a3a3a3] uppercase p-3">
-          <span className="text-white">Location: India</span>
-          <span>Age: 21YR</span>
-          <span className="mt-1 text-white/50 tabular-nums font-semibold tracking-widest">
-            {time ? `${time} IST` : '--:--:-- IST'}
-          </span>
-        </div>
+        {/* Side Navigation - Left */}
+        {!isAnyDetailActive && (
+          <div className="hidden sm:block">
+            {leftItems.map((item, index) => (
+              <DiamondNav key={item.id} item={item} index={index} side="left" />
+            ))}
+          </div>
+        )}
 
-        {/* Top-right Placeholder (Maintains center alignment for location/time) */}
-        <div className="w-10 h-10" aria-hidden="true" />
-      </div>
+        {/* Side Navigation - Right */}
+        {!isAnyDetailActive && (
+          <div className="hidden sm:block">
+            {rightItems.map((item, index) => (
+              <DiamondNav key={item.id} item={item} index={index} side="right" />
+            ))}
+          </div>
+        )}
 
-      {/* Side Navigation - Left */}
-      {!isAnyDetailActive && leftItems.map((item, index) => (
-        <DiamondNav key={item.id} item={item} index={index} side="left" />
-      ))}
-
-      {/* Side Navigation - Right */}
-      {!isAnyDetailActive && rightItems.map((item, index) => (
-        <DiamondNav key={item.id} item={item} index={index} side="right" />
-      ))}
+        {/* MOBILE BOTTOM NAVIGATION (Visible only on small screens) */}
+        {!isAnyDetailActive && (
+          <div className="sm:hidden absolute bottom-24 inset-x-0 z-[60] flex justify-center items-center overflow-x-auto px-4 py-4 custom-scrollbar no-scrollbar">
+            <div className="flex gap-4">
+              {navItems.map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => {
+                    usePortfolioStore.getState().setActivePage(item.page as any);
+                    usePortfolioStore.getState().setLockedPage(item.page as any);
+                  }}
+                  className={`flex flex-col items-center gap-2 p-2 min-w-[70px] ${usePortfolioStore.getState().activePage === item.page ? 'text-white' : 'text-white/40'}`}
+                >
+                  <div className={`w-5 h-5 border rotate-45 flex items-center justify-center ${usePortfolioStore.getState().activePage === item.page ? 'bg-white border-white' : 'border-white/30'}`}>
+                    <span className={`rotate-[-45deg] text-[8px] font-mono ${usePortfolioStore.getState().activePage === item.page ? 'text-black font-bold' : 'text-white'}`}>{item.id}</span>
+                  </div>
+                  <span className="font-mono text-[8px] tracking-widest uppercase">{item.label}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
 
       {/* Orchestrates Center Text Scrambling & Crossfades */}
       <HeroCenterText />

@@ -6,12 +6,14 @@ export default function ServicesBackground() {
   const activePage = usePortfolioStore((state) => state.activePage);
   const isServicesDetail = usePortfolioStore((state) => state.isServicesDetail);
 
+  if (activePage !== 'services') return null;
+
   return (
     <div 
-      className={`absolute inset-0 w-full h-full pointer-events-none z-0 transition-opacity duration-1000 grid grid-cols-2 sm:grid-cols-4 overflow-hidden ${activePage === 'services' && !isServicesDetail ? 'opacity-60' : 'opacity-0'}`}
+      className={`absolute inset-0 w-full h-full pointer-events-none z-0 transition-opacity duration-1000 grid grid-cols-2 sm:grid-cols-4 overflow-hidden ${!isServicesDetail ? 'opacity-60' : 'opacity-0'}`}
     >
-      {[...Array(16)].map((_, i) => (
-        <div key={i} className="relative w-full h-full">
+      {[...Array(12)].map((_, i) => (
+        <div key={i} className="relative w-full h-full border-[0.5px] border-white/5">
           <video 
             autoPlay 
             loop 
