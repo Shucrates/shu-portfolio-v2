@@ -7,6 +7,7 @@ import HeroCenterText from '@/components/HeroCenterText';
 import WorkProjectsList from '@/components/WorkProjectsList';
 import AboutDetailCard from '@/components/AboutDetailCard';
 import ServicesDetailCard from '@/components/ServicesDetailCard';
+import ContactDetailCard from '@/components/ContactDetailCard';
 import PageTransitionManager from '@/components/PageTransitionManager';
 
 export const navItems = [
@@ -26,9 +27,10 @@ export default function Home() {
   const isWorkDetail = usePortfolioStore((state) => state.isWorkDetail);
   const isAboutDetail = usePortfolioStore((state) => state.isAboutDetail);
   const isServicesDetail = usePortfolioStore((state) => state.isServicesDetail);
+  const isContactDetail = usePortfolioStore((state) => state.isContactDetail);
   const setIsWorkDetail = usePortfolioStore((state) => state.setIsWorkDetail);
   
-  const isAnyDetailActive = isWorkDetail || isAboutDetail || isServicesDetail;
+  const isAnyDetailActive = isWorkDetail || isAboutDetail || isServicesDetail || isContactDetail;
 
   // Global Mouse Tracker for Parallax Data (Zustand)
   useEffect(() => {
@@ -116,6 +118,9 @@ export default function Home() {
 
       {/* Services Detail Card (Active when 'View Services' is clicked in Services) */}
       <ServicesDetailCard />
+
+      {/* Contact Detail View (Active when 'Get In Touch' is clicked in Contact) */}
+      <ContactDetailCard />
 
 
 

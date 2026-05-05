@@ -36,7 +36,8 @@ const PAGE_CONTENT: Record<string, { title: string, subtitle: string, button?: s
   },
   contact: {
     title: "CONTACT",
-    subtitle: "LET'S BUILD SOMETHING TOGETHER"
+    subtitle: "LET'S BUILD SOMETHING TOGETHER",
+    button: "GET IN TOUCH"
   }
 };
 
@@ -46,6 +47,7 @@ export default function HeroCenterText() {
   const setIsWorkDetail = usePortfolioStore((state) => state.setIsWorkDetail);
   const isAboutDetail = usePortfolioStore((state) => state.isAboutDetail);
   const isServicesDetail = usePortfolioStore((state) => state.isServicesDetail);
+  const isContactDetail = usePortfolioStore((state) => state.isContactDetail);
   const setIsServicesDetail = usePortfolioStore((state) => state.setIsServicesDetail);
   
   const containerRef = useRef<HTMLDivElement>(null);
@@ -168,16 +170,36 @@ export default function HeroCenterText() {
       
       <h1 
         data-cursor="expand" 
-        className="font-display text-6xl sm:text-7xl md:text-8xl uppercase leading-[0.85] tracking-tight mb-4 mr-[-1rem] cursor-default whitespace-pre-line"
+        className="font-display text-6xl sm:text-7xl md:text-8xl uppercase leading-[0.85] tracking-tight mb-4 mr-[-1rem] cursor-default whitespace-pre-line relative"
         onMouseEnter={scrambleHover}
         onMouseLeave={scrambleLeave}
       >
+        {activePage === 'contact' && !isContactDetail && (
+          <div 
+            className="absolute -top-32 left-1/2 -translate-x-1/2 w-32 h-40 pointer-events-none opacity-80 select-none scale-90"
+            ref={(el) => {
+              if (el) {
+                gsap.to(el, {
+                  y: -15,
+                  duration: 2.5,
+                  repeat: -1,
+                  yoyo: true,
+                  ease: "sine.inOut"
+                });
+              }
+            }}
+          >
+            <img 
+              src="/contact/frames/ezgif-frame-002-Photoroom.png" 
+              alt="Floating Phone" 
+              className="w-full h-full object-contain grayscale brightness-125 contrast-125 mix-blend-screen" 
+            />
+          </div>
+        )}
         <span ref={titleRef}>{PAGE_CONTENT[activePage].title}</span>
         <span className="text-5xl sm:text-6xl md:text-7xl align-top text-white/90">*</span>
       </h1>
       
-      {/* Wrap subtitle and button in a strict layout footprint to prevent the H1 title from shifting during flex-centering when line breaks or buttons dynamically appear */}
-      <div className="w-full flex flex-col items-center justify-start min-h-[160px]">
         {(activePage === 'archive' || activePage === 'awards') ? (
           <div className="mt-8 flex flex-col items-center gap-4 fade-in">
              <div className="flex items-center gap-4">
@@ -209,7 +231,7 @@ export default function HeroCenterText() {
              </p>
           </div>
         ) : (
-          <>
+          <div className="flex flex-col items-center">
             <p ref={subtitleRef} className="font-mono text-[10px] sm:text-[12px] tracking-[0.2em] sm:tracking-[0.3em] text-[#a3a3a3] text-center max-w-[500px] mt-2 mb-8 leading-loose uppercase whitespace-pre-line">
               {PAGE_CONTENT[activePage].subtitle}
             </p>
@@ -226,6 +248,8 @@ export default function HeroCenterText() {
                   usePortfolioStore.getState().setIsAboutDetail(true);
                 } else if (activePage === 'services') {
                   setIsServicesDetail(true);
+                } else if (activePage === 'contact') {
+                  usePortfolioStore.getState().setIsContactDetail(true);
                 }
               }}
             >
@@ -235,10 +259,9 @@ export default function HeroCenterText() {
               <span className="absolute bottom-0 right-0 w-2 h-2 border-b-[1.5px] border-r-[1.5px] border-white/50" />
               {PAGE_CONTENT[activePage].button || 'VIEW ALL'}
             </button>
-          </>
+
+          </div>
         )}
       </div>
-
-    </div>
   );
 }
