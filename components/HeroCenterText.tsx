@@ -18,7 +18,8 @@ const PAGE_CONTENT: Record<string, { title: string, subtitle: string, button?: s
   },
   about: {
     title: "ABOUT",
-    subtitle: "A LITTLE BIT OF BACKGROUND AND HISTORY"
+    subtitle: "A LITTLE BIT OF BACKGROUND AND HISTORY",
+    button: "LEARN MORE"
   },
   services: {
     title: "SERVICES",
@@ -40,6 +41,8 @@ const PAGE_CONTENT: Record<string, { title: string, subtitle: string, button?: s
 
 export default function HeroCenterText() {
   const activePage = usePortfolioStore((state) => state.activePage);
+  const isWorkDetail = usePortfolioStore((state) => state.isWorkDetail);
+  const setIsWorkDetail = usePortfolioStore((state) => state.setIsWorkDetail);
   
   const containerRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLSpanElement>(null);
@@ -83,9 +86,53 @@ export default function HeroCenterText() {
   };
 
   useEffect(() => {
+    if (isWorkDetail && activePage === 'work') {
+      gsap.to(containerRef.current, {
+        scale: 0,
+        opacity: 0,
+        duration: 1,
+        ease: 'expo.inOut'
+      });
+      gsap.to([subtitleRef.current, buttonRef.current], {
+        opacity: 0,
+        y: 20,
+        duration: 0.5,
+        ease: 'power2.inOut',
+        onComplete: () => {
+          if (subtitleRef.current) subtitleRef.current.style.display = 'none';
+          if (buttonRef.current) buttonRef.current.style.display = 'none';
+        }
+      });
+    } else {
+      gsap.to(containerRef.current, {
+        top: '50%',
+        left: '50%',
+        scale: 1,
+        opacity: 1,
+        duration: 1,
+        ease: 'expo.inOut'
+      });
+      if (PAGE_CONTENT[activePage].button) {
+         if (subtitleRef.current) subtitleRef.current.style.display = 'block';
+         if (buttonRef.current) buttonRef.current.style.display = 'block';
+         gsap.to([subtitleRef.current, buttonRef.current], {
+           opacity: 1,
+           y: 0,
+           duration: 0.6,
+           delay: 0.4,
+           ease: 'power2.out'
+         });
+      }
+    }
+  }, [isWorkDetail, activePage]);
+
+  useEffect(() => {
     const prev = prevPageRef.current;
     if (prev === activePage) return;
     prevPageRef.current = activePage;
+
+    // Reset work detail when switching pages
+    setIsWorkDetail(false);
 
     const content = PAGE_CONTENT[activePage];
     if (!content) return;
@@ -95,7 +142,7 @@ export default function HeroCenterText() {
     if (subtitleRef.current) scrambleElement(subtitleRef.current, content.subtitle, 0.8);
     
     // Button orchestration
-    if (content.button) {
+    if (content.button && !isWorkDetail) {
       gsap.fromTo(buttonRef.current, 
          { opacity: 0, y: 15, display: 'block' }, 
          { opacity: 1, y: 0, duration: 0.5, delay: 0.3, ease: 'power2.out' }
@@ -106,7 +153,7 @@ export default function HeroCenterText() {
       }});
     }
     
-  }, [activePage]);
+  }, [activePage, setIsWorkDetail]);
 
   return (
     <div ref={containerRef} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center text-center w-full px-4 mix-blend-lighten select-none z-30 pointer-events-auto">
@@ -123,15 +170,22 @@ export default function HeroCenterText() {
       
       {/* Wrap subtitle and button in a strict layout footprint to prevent the H1 title from shifting during flex-centering when line breaks or buttons dynamically appear */}
       <div className="w-full flex flex-col items-center justify-start min-h-[160px]">
-        <p ref={subtitleRef} className="font-mono text-[8.5px] sm:text-[10px] tracking-[0.2em] sm:tracking-[0.3em] text-[#a3a3a3] text-center max-w-[500px] mt-2 mb-8 leading-loose uppercase whitespace-pre-line">
+        <p ref={subtitleRef} className="font-mono text-[10px] sm:text-[12px] tracking-[0.2em] sm:tracking-[0.3em] text-[#a3a3a3] text-center max-w-[500px] mt-2 mb-8 leading-loose uppercase whitespace-pre-line">
           {PAGE_CONTENT[activePage].subtitle}
         </p>
 
         <button 
           ref={buttonRef}
           data-cursor="expand" 
-          style={{ display: activePage === 'work' ? 'block' : 'none', opacity: activePage === 'work' ? 1 : 0 }}
+          style={{ display: PAGE_CONTENT[activePage].button ? 'block' : 'none', opacity: PAGE_CONTENT[activePage].button ? 1 : 0 }}
           className="relative px-8 py-3.5 font-mono text-[11px] tracking-widest text-[#a3a3a3] hover:text-white uppercase transition-colors"
+          onClick={() => {
+            if (activePage === 'work') {
+              setIsWorkDetail(true);
+            } else if (activePage === 'about') {
+              usePortfolioStore.getState().setIsAboutDetail(true);
+            }
+          }}
         >
           <span className="absolute top-0 left-0 w-2 h-2 border-t-[1.5px] border-l-[1.5px] border-white/50" />
           <span className="absolute top-0 right-0 w-2 h-2 border-t-[1.5px] border-r-[1.5px] border-white/50" />

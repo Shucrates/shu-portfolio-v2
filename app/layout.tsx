@@ -24,7 +24,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${jetbrainsMono.variable} ${akira.variable} h-full antialiased`}>
+    <html lang="en" className={`${jetbrainsMono.variable} ${akira.variable} h-full antialiased`} suppressHydrationWarning>
       <body className="min-h-full flex flex-col bg-black text-white selection:bg-white selection:text-black">
         <CustomCursor />
         {children}

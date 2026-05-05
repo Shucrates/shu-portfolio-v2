@@ -5,8 +5,12 @@ export type PageId = 'home' | 'work' | 'about' | 'services' | 'archive' | 'award
 interface PortfolioStore {
   activePage: PageId;
   lockedPage: PageId | null;
+  isWorkDetail: boolean;
+  isAboutDetail: boolean;
   setActivePage: (page: PageId) => void;
   setLockedPage: (page: PageId | null) => void;
+  setIsWorkDetail: (val: boolean) => void;
+  setIsAboutDetail: (val: boolean) => void;
   mousePosition: { x: number; y: number };
   setMousePosition: (pos: { x: number; y: number }) => void;
 }
@@ -14,8 +18,12 @@ interface PortfolioStore {
 export const usePortfolioStore = create<PortfolioStore>((set) => ({
   activePage: 'home',
   lockedPage: null,
+  isWorkDetail: false,
+  isAboutDetail: false,
   setActivePage: (page) => set({ activePage: page }),
   setLockedPage: (page) => set({ lockedPage: page }),
+  setIsWorkDetail: (val) => set({ isWorkDetail: val }),
+  setIsAboutDetail: (val) => set({ isAboutDetail: val }),
   mousePosition: { 
     x: typeof window !== 'undefined' ? window.innerWidth / 2 : 0, 
     y: typeof window !== 'undefined' ? window.innerHeight / 2 : 0 
